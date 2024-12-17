@@ -1,0 +1,24 @@
+
+.main-content {
+  transition: margin-left 0.5s;
+  padding: 10px;
+  padding-top: 60px;
+  max-width: calc(100% - 250px); /* Adjust dynamically based on SideNav */
+  margin: 0 auto;
+  box-sizing: border-box;
+  overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+.main-content.shifted {
+  margin-left: 250px; /* Align with SideNav width */
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    max-width: 100%; /* Use full width for small screens */
+  }
+
+  .main-content.shifted {
+    margin-left: 0; /* Remove margin when SideNav is collapsed */
+  }
+}

@@ -1,0 +1,44 @@
+.page2-container {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.file-dropdown-container {
+  margin-bottom: 20px;
+}
+
+.file-dropdown {
+  width: 300px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+}
+
+.file-dropdown:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-and-alarm {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.selected-file-name {
+  margin-bottom: 20px;
+  font-size: 18px;
+  font-weight: bold;
+}

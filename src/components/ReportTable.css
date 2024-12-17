@@ -1,0 +1,58 @@
+/* src/components/ReportTable.css */
+.table-container {
+    margin: 0px;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  
+  .table-titles{
+    background-color: #e1faff; /* Example background color */
+    font-weight: bold;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .test-type, .table-info{
+    background-color: #c7f0f8;
+    font-weight: bold;
+    text-align: center;
+    font-size: 12px;
+  }
+  
+  table {
+    width: 100%;
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #21daff;
+    font-size:12px;
+  }
+  
+  .table-logo {
+    height: 50px;
+    vertical-align: middle;
+  }
+  
+  .table-title {
+    font-size: 1.5em;
+    vertical-align: middle;
+    padding-left: 10px;
+  }
+
+  /* Default hover effect for table rows */
+tbody tr:hover {
+  background-color: #ffffff; /* Default hover background color */
+}
+
+/* Custom hover effect for title rows */
+tbody tr.table-titles:hover {
+  background-color: #e1faff; /* Different hover background color for title rows */
+}

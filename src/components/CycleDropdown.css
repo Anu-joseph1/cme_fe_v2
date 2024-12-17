@@ -1,0 +1,18 @@
+css
+.dropdown-container {
+  margin-bottom: 10px; /* Example: Add spacing */
+  border: 1px solid #d7d7d7; /* Example: Add a border  */
+  padding: 10px; /* Example: Add padding */
+  font-weight: bold;
+}
+
+.dropdown-container select {
+  width: 100%; /* Example: Make dropdown fill container */
+  padding: 8px; /* Example: Add padding */
+  border: 1px solid #ccc; /* Example: Add a border */
+}
+
+.dropdown-container label {
+  display: block; /* Example: Place label above dropdown */
+  margin-bottom: 5px; /* Example: Add spacing */
+}

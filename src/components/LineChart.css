@@ -1,0 +1,48 @@
+/* Basic styling for the LineChart wrapper */
+/* Basic styling for the LineChart wrapper */
+.linechart-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;  /* Make sure it takes up full height */
+  background-color: #f4f4f9;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.linechart-container {
+  width: 100%;
+  max-width: 1200px;  /* Set max width for larger screens */
+  height: 100%;  /* Full height of its parent */
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Soft shadow around the chart */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+
+/* Style for the Plotly chart itself */
+.plotly-chart {
+  width: 100%;  /* Full width for responsiveness */
+  height: 100%; /* Full height for responsiveness */
+  border-radius: 8px;
+}
+
+/* Optional: Styling for loading state */
+.loading {
+  font-size: 20px;
+  text-align: center;
+  color: #777;
+  padding: 50px;
+}
+
+/* Ensure the container and the chart take full available space */
+.linechart-wrapper, .linechart-container {
+  height: 100%;
+}
+
+/* If you have any nested container, ensure they are also flexible */
+.linechart-container > * {
+  height: 100%; /* Allow all inner elements to expand */
+}

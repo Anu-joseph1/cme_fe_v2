@@ -1,0 +1,12 @@
+/* src/components/TimePickerComponent.css */
+.time-picker-container {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .time-picker-container label {
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
