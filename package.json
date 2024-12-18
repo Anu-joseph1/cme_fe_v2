@@ -18,7 +18,7 @@
     "dayjs": "^1.11.11",
     "papaparse": "^5.4.1",
     "plotly.js": "^2.35.3",
-    "plotly.js-dist": "^2.32.0",
+    "plotly.js-dist": "^2.35.3",
     "react": "^18.3.1",
     "react-chartjs-2": "^5.2.0",
     "react-datetime-picker": "^6.0.1",

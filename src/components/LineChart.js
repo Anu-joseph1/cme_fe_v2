@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Plot from "react-plotly.js";
+import React, { useEffect, useState, useRef } from "react";
+import Plotly from "plotly.js-dist"; // Import Plotly
 import axios from "axios";
 
 const LineChart = ({ fileName }) => {
   const [chartData, setChartData] = useState(null);
+  const chartRef = useRef(null); // Create a ref for the chart container
 
   useEffect(() => {
     const fetchData = async () => {
@@ -11,7 +12,6 @@ const LineChart = ({ fileName }) => {
         const response = await axios.get("http://127.0.0.1:8000/data", {
           params: { file_name: fileName },
         });
-
         const rawData = response.data;
 
         // Extract X-axis (Time)
@@ -40,7 +40,9 @@ const LineChart = ({ fileName }) => {
             showgrid: true,
             tickangle: -45,
             tickfont: { size: 14 },
-            
+            tickmode: "linear", // Ensure ticks follow a regular interval
+            dtick: Math.ceil(xValues.length / 10), // Show every nth label (adjust to avoid congestion)
+            automargin: true, // Adjust margin for readability
           },
           yaxis: {
             title: "Sensor Values",
@@ -53,14 +55,12 @@ const LineChart = ({ fileName }) => {
             y: 1,
             orientation: "v",
           },
-          width: 1000,
-          height: 620,
+          // width: 1000,
+          height: 700,
           autosize: true,
-
         };
 
         setChartData({ traces, layout });
-        console.log("Chart data", chartData.traces)
       } catch (error) {
         console.error("Error fetching chart data:", error);
       }
@@ -77,6 +77,23 @@ const LineChart = ({ fileName }) => {
     return colors[index % colors.length];
   };
 
+  useEffect(() => {
+    if (chartData) {
+      // Render the chart when chartData is available
+      Plotly.newPlot(chartRef.current, chartData.traces, chartData.layout, {
+        responsive: true,
+        scrollZoom: true, // Enable zooming via mouse scroll
+        displayModeBar: true,
+      });
+    }
+
+    return () => {
+      if (chartRef.current) {
+        Plotly.purge(chartRef.current); // Clean up the plot when component unmounts or updates
+      }
+    };
+  }, [chartData]);
+
   if (!chartData) {
     return <div>Loading chart...</div>;
   }
@@ -84,16 +101,7 @@ const LineChart = ({ fileName }) => {
   return (
     <div className="linechart-wrapper">
       <div className="linechart-container">
-        <Plot
-          className="plotly-chart"
-          data={chartData.traces}
-          layout={chartData.layout}
-          config={{
-            responsive: true,
-            scrollZoom: true, // Enable zooming via mouse scroll
-            displayModeBar: true,
-          }}
-        />
+        <div ref={chartRef} /> {/* Empty div to hold the Plotly chart */}
       </div>
     </div>
   );

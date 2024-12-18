@@ -9,10 +9,10 @@ const TopBar = ({ toggleNav, logoSrc }) => {
       <FaBars className="hamburger-menu" onClick={toggleNav} />
       <div className="logo-container">
         <img src={logoSrc} alt="Logo" className="logo" />
-        <span className="company-name">CME DASHBOARD</span>
+        <span className="company-name">CSV ANALYZE DASHBOARD</span>
       </div>
       <div className="icons-container">
-        <FaBell className="icon" />
+        {/* <FaBell className="icon" /> */}
         {/* <FaCog className="icon" /> */}
       </div>
     </div>

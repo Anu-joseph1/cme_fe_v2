@@ -10,7 +10,7 @@ const SideNav = ({ isOpen, toggleNav }) => {
     <div className={`sidenav ${isOpen ? 'open' : ''}`}>
       <span className="closebtn" onClick={toggleNav}>&times;</span>
       <Link to="/page1" className={location.pathname === '/page1' ? 'active' : ''}>Dashboard</Link>
-      <Link to="/page2" className={location.pathname === '/page2' ? 'active' : ''}>Profile</Link>
+      {/* <Link to="/page2" className={location.pathname === '/page2' ? 'active' : ''}>Profile</Link> */}
 
     </div>
   );
