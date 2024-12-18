@@ -1,25 +1,21 @@
 import React, { useState, useEffect } from "react";
 import dayjs from "dayjs";
-import { useLocation } from "react-router-dom";
 import LineChart from "../components/LineChart";
-import DateTimePickerComponent from "../components/DateTimePickerComponent";
 import Alarm from "../components/Alarm";
 import "./Page1.css";
 
 const Page1 = () => {
-  const location = useLocation();
-  const [fileName, setFileName] = useState(location.state?.fileName || null);
-  const [csvData, setCsvData] = useState([]);
-  const [startDateTime, setStartDateTime] = useState(dayjs().subtract(6, "hour"));
-
+  const [csvFiles, setCsvFiles] = useState([]); // List of CSV files
+  const [fileName, setFileName] = useState(null); // Selected file
+  const [csvData, setCsvData] = useState([]); // Data for the selected file
 
   useEffect(() => {
-    fetchLatestFile();
+    fetchCsvFiles();
   }, []);
 
-  const fetchLatestFile = async () => {
+  // Fetch the list of CSV files from the backend
+  const fetchCsvFiles = async () => {
     try {
-      // Fetch the list of CSV files from the backend
       const response = await fetch("http://localhost:8000/csv_files"); // Update with your backend URL
       if (!response.ok) {
         console.error("Failed to fetch CSV files:", response.statusText);
@@ -27,21 +23,12 @@ const Page1 = () => {
       }
 
       const { csv_files } = await response.json();
-
       if (csv_files && csv_files.length > 0) {
-        // Sort the files by timestamp in descending order
-        const sortedFiles = csv_files.sort((a, b) => {
-          const getTimestamp = (fileName) => {
-            const timestamp = fileName.match(/\d{14}/); // Match the 14-digit timestamp
-            return timestamp ? dayjs(timestamp[0], "YYYYMMDDHHmmss").valueOf() : 0;
-          };
-          return getTimestamp(b) - getTimestamp(a); // Descending order
-        });
+        setCsvFiles(csv_files);
 
-        const latestFile = sortedFiles[0]; // Get the latest file
+        // Automatically select the latest file on initial load
+        const latestFile = getLatestFile(csv_files);
         setFileName(latestFile);
-
-        // Fetch the data of the latest file
         fetchFileData(latestFile);
       } else {
         console.error("No CSV files available.");
@@ -51,9 +38,21 @@ const Page1 = () => {
     }
   };
 
-  const fetchFileData = async (fileName) => {
+  // Determine the latest file based on the timestamp
+  const getLatestFile = (files) => {
+    return files.sort((a, b) => {
+      const getTimestamp = (fileName) => {
+        const timestamp = fileName.match(/\d{14}/); // Match the 14-digit timestamp
+        return timestamp ? dayjs(timestamp[0], "YYYYMMDDHHmmss").valueOf() : 0;
+      };
+      return getTimestamp(b) - getTimestamp(a); // Descending order
+    })[0];
+  };
+
+  // Fetch data for the selected file
+  const fetchFileData = async (selectedFile) => {
     try {
-      const response = await fetch(`http://localhost:8000/data?file_name=${fileName}`); // Update with your backend URL
+      const response = await fetch(`http://localhost:8000/data?file_name=${selectedFile}`); // Update with your backend URL
       if (!response.ok) {
         console.error("Failed to fetch file data:", response.statusText);
         return;
@@ -66,34 +65,56 @@ const Page1 = () => {
     }
   };
 
+  // Handle file selection from the dropdown
+  const handleDropdownChange = (event) => {
+    const selectedFile = event.target.value;
+    setFileName(selectedFile);
+    fetchFileData(selectedFile);
+  };
+
   return (
     <div className="dashboard">
-      <div className="controls-container">
-        <DateTimePickerComponent
-          label="Start DateTime:"
-          value={startDateTime}
-          onChange={setStartDateTime}
-        />
+      {/* Dropdown and File Name container */}
+      <div className="file-dropdown-container-wrapper">
+        <div className="file-dropdown-container">
+          <h3>Select a CSV File:</h3>
+          <select
+            value={fileName || ""}
+            onChange={handleDropdownChange}
+            className="file-dropdown"
+          >
+            <option value="" disabled>
+              -- Choose a file --
+            </option>
+            {csvFiles.map((file, index) => (
+              <option key={index} value={file}>
+                {file}
+              </option>
+            ))}
+          </select>
+        </div>
+        {/* {fileName && <p className="file-name">Selected File Name: {fileName}</p>} */}
       </div>
-
       <div className="content-container">
-  <div className="chart-section">
-    {fileName && <h3 className="file-name">File Name: {fileName}</h3>}
-    {csvData.length > 0 ? (
-      <LineChart fileName={fileName} data={csvData} />
-    ) : (
-      <p>Loading chart data...</p>
-    )}
-  </div>
-  <div className="alarm-section">
-    {csvData.length > 0 ? (
-      <Alarm fileName={fileName} alarmData={csvData} />
-    ) : (
-      <p>Loading alarm data...</p>
-    )}
+      
+        <div className="chart-section">
+          
+          {csvData.length > 0 ? (
+            <LineChart fileName={fileName} data={csvData} />
+          ) : (
+            <p>Loading chart data...</p>
+          )}
+        </div>
+        <div className="alarm-section">
+          {csvData.length > 0 ? (
+            <Alarm fileName={fileName} alarmData={csvData} />
+          ) : (
+            <p>Loading alarm data...</p>
+          )}
         </div>
       </div>
     </div>
+
   );
 };
 

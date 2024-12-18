@@ -35,7 +35,7 @@ const Alarm = ({ fileName }) => {
 
   return (
     <div className="alarm-container">
-      <h2>Alarm Data</h2>
+      {/* <h2>Alarm Data</h2> */}
       <div className="table-container">
         <table>
           <thead>

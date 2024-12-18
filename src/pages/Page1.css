@@ -2,17 +2,49 @@
 .dashboard {
   display: flex;           /* Set the parent container as a flex container */
   flex-direction: column;  /* Stack the controls and content vertically */
-  padding: 20px;
+  padding: 10px;
   background-color: #f4f4f4;
   min-height: 95vh;       /* Ensure the page takes at least the full viewport height */
 }
+
+/* Container to hold the file dropdown and file name */
+.file-dropdown-container-wrapper {
+  display: flex;            /* Align items horizontally */
+  align-items: center;      /* Vertically center the items */
+  justify-content: flex-start; /* Align to the left */
+  gap: 20px;                /* Space between the dropdown and file name */
+  margin: 5px;      /* Space below the container */
+}
+
+/* Dropdown container for file selection */
+.file-dropdown-container {
+  display: flex;           /* Align items in a row */
+  align-items: center;     /* Vertically center align items */
+  gap: 10px;               /* Space between the label and the dropdown */
+}
+
+.file-dropdown-container h3 {
+  margin: 0;               /* Remove default margin from the heading */
+  font-size: 1.2em;        /* Adjust the font size for better visibility */
+  color: #333;             /* Optional: Adjust text color */
+}
+
+.file-dropdown {
+  padding: 5px;            /* Add padding for dropdown */
+  font-size: 16px;         /* Ensure text is readable */
+  border: 1px solid #ccc;  /* Optional: Add a border */
+  border-radius: 4px;      /* Rounded corners for better aesthetics */
+  background-color: #fff;  /* Dropdown background color */
+  width: auto;
+}
+
 
 /* Controls container at the top */
 .controls-container {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 /* Unified container for LineChart and Alarm */
@@ -21,27 +53,22 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 10px;
-  background-color: #d4d4d4;
+  background-color: #eeeeee;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap; /* Allow wrapping for small screens */
-  flex-grow: 1;   /* Make this container take up remaining space */
+  flex-wrap: wrap;
+  flex-grow: 1;
+  width: 100%;  /* Ensure full width */
 }
 
 /* Left section for LineChart */
 .chart-section {
-  flex: 2; /* Takes more space */
-  min-width: 300px; /* Ensure a minimum width */
-  max-width: 100%; /* Restrict overflow on smaller screens */
-  width: 75%; /* Allow it to shrink with the container */
-  overflow: auto; /* Enable scrolling if content overflows */
-  display: flex;
-  flex-direction: column; /* Stack the file name and chart */
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box; /* Include padding in the width/height calculation */
-  padding: 10px;
+  flex: 3;  /* Increase the flex-grow to give more space to the chart */
+  min-width: 300px;
+  width: 100%;
+  overflow: auto;
+  padding: 10px;  /* Adjust padding to avoid cramped chart */
 }
 
 /* Styling for the file name above the chart */
@@ -55,47 +82,27 @@
 
 /* Right section for Alarm */
 .alarm-section {
-  flex: 1; /* Takes less space */
-  min-width: 400px; /* Ensure a minimum width */
-  max-width: 100%; /* Restrict overflow on smaller screens */
-  width: 100%; /* Allow it to shrink with the container */
-  display: flex;
-  justify-content: center; /* Center the content */
-  align-items: center;
-  box-sizing: border-box; /* Include padding in the width/height calculation */
-  box-shadow: 1px;
+  flex: 1;  /* Keeps alarm section smaller */
+  min-width: 300px;
+  width: 100%;
+  padding: 10px;
 }
+
 
 /* Responsive styles for smaller screens */
 @media (max-width: 768px) {
   .content-container {
     flex-direction: column; /* Stack sections vertically */
-    align-items: center; /* Center align the content */
     gap: 10px; /* Reduce gap for mobile view */
   }
 
-  .chart-section, .alarm-section {
-    flex: 1; /* Equal space on mobile */
-    width: 100%; /* Take full width */
-    max-width: none; /* Remove max-width constraints */
-  }
-
   .chart-section {
-    height: auto; /* Adjust height based on content */
-  }
-
-  /* Ensure chart-section is responsive and adjusts layout */
-  .chart-section {
-    flex: 2; /* Takes more space */
-    min-width: 300px;
-    max-width: 100%;
     width: 100%;
-    display: flex;
-    flex-direction: column; /* Stack file name and chart vertically */
-    box-sizing: border-box;
-    padding: 10px;
-    box-shadow: 2px;
+    min-width: 300px; /* Ensure it has a minimum width */
+    height: 50vh;  /* Adjust height to fill more space */
+    padding: 15px;
   }
+
 
   .file-name {
     font-size: 1.2em; /* Adjust font size for smaller screens */

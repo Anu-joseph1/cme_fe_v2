@@ -1,6 +1,8 @@
 /* Basic styling for the LineChart wrapper */
 /* Basic styling for the LineChart wrapper */
-.linechart-wrapper {
+
+
+._linechart-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,11 +10,12 @@
   background-color: #f4f4f9;
   padding: 10px;
   box-sizing: border-box;
-}
+} 
 
-.linechart-container {
+
+._linechart-container {
   width: 100%;
-  max-width: 1200px;  /* Set max width for larger screens */
+  /* max-width: 1200px;  Set max width for larger screens */
   height: 100%;  /* Full height of its parent */
   background-color: #ffffff;
   border-radius: 8px;

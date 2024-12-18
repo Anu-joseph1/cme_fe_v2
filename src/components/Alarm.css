@@ -1,6 +1,6 @@
   /* Style for the alarm table container */
 .table-container {
-    max-height: 500px; /* Set the max height to fit approximately 13 rows */
+    max-height: 700px; /* Set the max height to fit approximately 13 rows */
     overflow-y: auto; /* Enable vertical scrolling */
     border: 3px solid #ddd; /* Add a border around the table */
     border-radius: 9px; /* Add rounded corners */

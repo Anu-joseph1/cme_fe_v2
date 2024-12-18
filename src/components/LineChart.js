@@ -53,12 +53,14 @@ const LineChart = ({ fileName }) => {
             y: 1,
             orientation: "v",
           },
+          width: 1000,
+          height: 620,
           autosize: true,
-          width: 800,
-          height: 400,
+
         };
 
         setChartData({ traces, layout });
+        console.log("Chart data", chartData.traces)
       } catch (error) {
         console.error("Error fetching chart data:", error);
       }
