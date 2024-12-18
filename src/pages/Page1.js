@@ -8,12 +8,14 @@ const Page1 = () => {
   const [csvFiles, setCsvFiles] = useState([]); // List of CSV files
   const [fileName, setFileName] = useState(null); // Selected file
   const [csvData, setCsvData] = useState([]); // Data for the selected file
+  const [selectedFile, setSelectedFile] = useState(null); // File selected for upload
+  const [uploadMessage, setUploadMessage] = useState(""); // Message after upload
+  const [showPopup, setShowPopup] = useState(false); // Popup visibility
 
   useEffect(() => {
     fetchCsvFiles();
   }, []);
 
-  // Fetch the list of CSV files from the backend
   const fetchCsvFiles = async () => {
     try {
       const response = await fetch("http://localhost:8000/csv_files"); // Update with your backend URL
@@ -26,7 +28,6 @@ const Page1 = () => {
       if (csv_files && csv_files.length > 0) {
         setCsvFiles(csv_files);
 
-        // Automatically select the latest file on initial load
         const latestFile = getLatestFile(csv_files);
         setFileName(latestFile);
         fetchFileData(latestFile);
@@ -38,21 +39,19 @@ const Page1 = () => {
     }
   };
 
-  // Determine the latest file based on the timestamp
   const getLatestFile = (files) => {
     return files.sort((a, b) => {
       const getTimestamp = (fileName) => {
-        const timestamp = fileName.match(/\d{14}/); // Match the 14-digit timestamp
+        const timestamp = fileName.match(/\d{14}/);
         return timestamp ? dayjs(timestamp[0], "YYYYMMDDHHmmss").valueOf() : 0;
       };
-      return getTimestamp(b) - getTimestamp(a); // Descending order
+      return getTimestamp(b) - getTimestamp(a);
     })[0];
   };
 
-  // Fetch data for the selected file
   const fetchFileData = async (selectedFile) => {
     try {
-      const response = await fetch(`http://localhost:8000/data?file_name=${selectedFile}`); // Update with your backend URL
+      const response = await fetch(`http://localhost:8000/data?file_name=${selectedFile}`);
       if (!response.ok) {
         console.error("Failed to fetch file data:", response.statusText);
         return;
@@ -65,40 +64,96 @@ const Page1 = () => {
     }
   };
 
-  // Handle file selection from the dropdown
   const handleDropdownChange = (event) => {
     const selectedFile = event.target.value;
     setFileName(selectedFile);
     fetchFileData(selectedFile);
   };
 
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const handleFileUpload = async (event) => {
+    event.preventDefault();
+    if (!selectedFile) {
+      setUploadMessage("Please select a file to upload.");
+      setShowPopup(true);
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+    formData.append("userid", "12345"); // Replace with actual user ID
+    formData.append("new_filename", selectedFile.name); // Optional new filename
+
+    try {
+      const response = await fetch("http://localhost:8000/upload/", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUploadMessage(data.message);
+        fetchCsvFiles();
+      } else {
+        const errorData = await response.json();
+        setUploadMessage(`Upload failed: ${errorData.detail}`);
+      }
+    } catch (error) {
+      setUploadMessage(`Upload failed: ${error.message}`);
+    } finally {
+      setShowPopup(true);
+    }
+  };
+
   return (
     <div className="dashboard">
-      {/* Dropdown and File Name container */}
-      <div className="file-dropdown-container-wrapper">
-        <div className="file-dropdown-container">
-          <h3>Select a CSV File:</h3>
-          <select
-            value={fileName || ""}
-            onChange={handleDropdownChange}
-            className="file-dropdown"
-          >
-            <option value="" disabled>
-              -- Choose a file --
-            </option>
-            {csvFiles.map((file, index) => (
-              <option key={index} value={file}>
-                {file}
+      <div className="top-section">
+        {/* Dropdown and File Name container */}
+        <div className="file-dropdown-container-wrapper">
+          <div className="file-dropdown-container">
+            <h3>Select a CSV File:</h3>
+            <select
+              value={fileName || ""}
+              onChange={handleDropdownChange}
+              className="file-dropdown"
+            >
+              <option value="" disabled>
+                -- Choose a file --
               </option>
-            ))}
-          </select>
+              {csvFiles.map((file, index) => (
+                <option key={index} value={file}>
+                  {file}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        {/* {fileName && <p className="file-name">Selected File Name: {fileName}</p>} */}
+
+        {/* File Upload Section */}
+        <div className="upload-container">
+          <h3>Upload a CSV File:</h3>
+          <form onSubmit={handleFileUpload}>
+            <input type="file" accept=".csv" onChange={handleFileChange} className="choose-file-button"/>
+            <button type="submit" className="upload-button custom-button">Upload to Cloud</button>
+          </form>
+        </div>
       </div>
+
+      {/* Popup for Upload Message */}
+      {showPopup && (
+        <div className="popup-overlay" onClick={() => setShowPopup(false)}>
+          <div className="popup">
+            <p>{uploadMessage}</p>
+            <button onClick={() => setShowPopup(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
       <div className="content-container">
-      
         <div className="chart-section">
-          
           {csvData.length > 0 ? (
             <LineChart fileName={fileName} data={csvData} />
           ) : (
@@ -114,7 +169,6 @@ const Page1 = () => {
         </div>
       </div>
     </div>
-
   );
 };
 

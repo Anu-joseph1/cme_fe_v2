@@ -9,7 +9,7 @@ import Page3 from "./pages/Page3";
 import Page4 from "./pages/Page4";
 import Alarm from "./components/Alarm"; // New Alarm Table Component
 import "./App.css"; // Ensure you have CSS for layout
-import bemllogo from "./assets/CME1.png";
+import bemllogo from "./assets/logo.png";
 
 const App = () => {
   const [isOpen, setIsOpen] = useState(window.innerWidth > 768);

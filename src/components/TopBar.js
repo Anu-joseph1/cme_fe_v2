@@ -9,7 +9,7 @@ const TopBar = ({ toggleNav, logoSrc }) => {
       <FaBars className="hamburger-menu" onClick={toggleNav} />
       <div className="logo-container">
         <img src={logoSrc} alt="Logo" className="logo" />
-        <span className="company-name">CSV ANALYZE DASHBOARD</span>
+        <span className="company-name">EnviCom Analysis</span>
       </div>
       <div className="icons-container">
         {/* <FaBell className="icon" /> */}
