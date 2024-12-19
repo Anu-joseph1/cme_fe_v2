@@ -9,7 +9,7 @@ const LineChart = ({ fileName }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/data", {
+        const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data", {
           params: { file_name: fileName },
         });
         const rawData = response.data;

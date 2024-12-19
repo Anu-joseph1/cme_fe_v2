@@ -15,7 +15,7 @@ const Page2 = () => {
     // Fetch the list of CSV files from the backend
     const fetchCsvFiles = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/csv_files");
+        const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files");
         setCsvFiles(response.data.csv_files); // Assumes API returns { csv_files: [] }
       } catch (error) {
         console.error("Error fetching CSV files:", error);

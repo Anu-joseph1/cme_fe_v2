@@ -88,7 +88,7 @@ const Page1 = () => {
     formData.append("new_filename", selectedFile.name); // Optional new filename
 
     try {
-      const response = await fetch("http://localhost:8000/upload/", {
+      const response = await fetch("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/upload/", {
         method: "POST",
         body: formData,
       });

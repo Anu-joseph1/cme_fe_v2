@@ -9,7 +9,7 @@ const Alarm = ({ fileName }) => {
   useEffect(() => {
     const fetchAlarmData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/data_alarm", {
+        const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data_alarm", {
           params: { file_name: fileName }
         });
         console.log("Alarm Data:", response.data);
