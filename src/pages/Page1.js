@@ -18,7 +18,7 @@ const Page1 = () => {
 
   const fetchCsvFiles = async () => {
     try {
-      const response = await fetch("http://localhost:8000/csv_files"); // Update with your backend URL
+      const response = await fetch("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files"); // Update with your backend URL
       if (!response.ok) {
         console.error("Failed to fetch CSV files:", response.statusText);
         return;
@@ -51,7 +51,7 @@ const Page1 = () => {
 
   const fetchFileData = async (selectedFile) => {
     try {
-      const response = await fetch(`http://localhost:8000/data?file_name=${selectedFile}`);
+      const response = await fetch(`https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data?file_name=${selectedFile}`);
       if (!response.ok) {
         console.error("Failed to fetch file data:", response.statusText);
         return;
