@@ -48,6 +48,13 @@ const LineChart = ({ fileName }) => {
             title: "Sensor Values",
             showgrid: true,
             tickfont: { size: 14 },
+            ticksuffix: " °c ",
+          },
+          yaxis2: {
+            title: "Sensor Values 2",
+            showgrid: true,
+            tickfont: { size: 14 },
+            ticksuffix: " mmHg ",
           },
           legend: {
             font: { size: 12 },
@@ -84,6 +91,7 @@ const LineChart = ({ fileName }) => {
         responsive: true,
         scrollZoom: true, // Enable zooming via mouse scroll
         displayModeBar: true,
+        displaylogo: false,
       });
     }
 
