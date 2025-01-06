@@ -114,7 +114,7 @@ const Page1 = () => {
         {/* Dropdown and File Name container */}
         <div className="file-dropdown-container-wrapper">
           <div className="file-dropdown-container">
-            <h5>Select a CSV File:</h5>
+            <h5 className="select-csv-text">Select a CSV File:</h5>
             <select
               value={fileName || ""}
               onChange={handleDropdownChange}
@@ -134,10 +134,10 @@ const Page1 = () => {
 
         {/* File Upload Section */}
         <div className="upload-container">
-          <h5>Upload a CSV File:</h5>
+          <h5 className="upload-csv-text">Upload a CSV File:</h5>
           <form onSubmit={handleFileUpload}>
             <input type="file" accept=".csv" onChange={handleFileChange} className="choose-file-button"/>
-            <button type="submit" className="upload-button custom-button">Upload to Cloud</button>
+            <button type="submit" className="upload-button custom-button">Upload </button>
           </form>
         </div>
       </div>
