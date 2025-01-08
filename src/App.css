@@ -1,8 +1,8 @@
 
 .main-content {
   transition: margin-left 0.5s;
-  padding: 10px;
-  padding-top: 60px;
+  padding: 0px;
+  padding-top: 70px;
   max-width: calc(100% - 250px); /* Adjust dynamically based on SideNav */
   margin: 0 auto;
   box-sizing: border-box;
@@ -10,7 +10,7 @@
 }
 
 .main-content.shifted {
-  margin-left: 250px; /* Align with SideNav width */
+  margin-left: 300px; /* Align with SideNav width */
 }
 
 @media (max-width: 768px) {

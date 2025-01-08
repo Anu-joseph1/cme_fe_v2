@@ -2,7 +2,7 @@
 .dashboard {
   display: flex;           /* Set the parent container as a flex container */
   flex-direction: column;  /* Stack the controls and content vertically */
-  padding: 10px;
+  padding: 0px;
   background-color: #ffffff;
   height: 100%;
   min-height: 95vh;       /* Ensure the page takes at least the full viewport height */
@@ -96,7 +96,7 @@
   align-items: flex-start;
   gap: 10px;
   background-color: #ffffff;
-  padding: 20px;
+  padding: 0px;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   flex-wrap: wrap;
@@ -111,7 +111,7 @@
   min-width: 300px;
   width: 100%;
   overflow: auto;
-  padding: 10px;  /* Adjust padding to avoid cramped chart */
+  padding: 0px;  /* Adjust padding to avoid cramped chart */
 }
 
 /* Right section for Alarm */
@@ -119,7 +119,7 @@
   flex: 1;  /* Keeps alarm section smaller */
   min-width: 300px;
   width: 100%;
-  padding: 10px;
+  padding: 25px;
 }
 
 .top-section {
@@ -133,7 +133,7 @@
   align-items: center; /* Vertically align items */
   gap: 15px; /* Add space between elements */
   flex: 1; /* Allow this section to grow */
-  justify-content: flex-end; /* Align the upload section to the right */
+  justify-content: flex-start; /* Align the upload section to the right */
 }
 
 .upload-container h3 {
@@ -182,25 +182,117 @@
   background: #0056b3;
 }
 
-
-
-/* Responsive styles for smaller screens */
-@media (max-width: 768px) {
-  .content-container {
-    flex-direction: column; /* Stack sections vertically */
-    gap: 10px; /* Reduce gap for mobile view */
+/* Desktop view */
+@media (min-width: 769px) {
+  .chart-alarm-container {
+    display: flex;
+    flex-direction: row; /* Arrange the line chart and alarm data side by side */
+    justify-content: space-between; /* Space out the line chart and alarm data */
+    gap: 20px; /* Add space between chart and alarm data */
+    align-items: flex-start; /* Align at the top */
+    width: 100%; /* Full width */
   }
 
-  .chart-section {
-    width: 100%;
-    min-width: 300px; /* Ensure it has a minimum width */
-    height: 50vh;  /* Adjust height to fill more space */
-    padding: 15px;
+  .line-chart-container {
+    flex: 1; /* Take available space */
+    max-width: 50%; /* Ensure the chart doesn't take more than 50% of the space */
   }
 
+  .alarm-data-container {
+    flex: 1; /* Take available space */
+    max-width: 50%; /* Ensure alarm data takes up the other 50% */
+    display: flex;
+    flex-direction: column; /* Stack alarm data items vertically */
+  }
 
-  .file-name {
-    font-size: 1.2em; /* Adjust font size for smaller screens */
-    text-align: center;
+  .alarm-data {
+    text-align: left; /* Align alarm data to the left */
+    margin-bottom: 10px; /* Space between alarm data items */
+  }
+}
+
+/* Mobile view */
+@media (max-width: 1082px) {
+  .top-section {
+    flex-direction: column; /* Stack elements vertically in mobile view */
+    gap: 10px; /* Add space between the stacked elements */
+    align-items: stretch; /* Ensure full-width alignment */
+    padding: 0; /* Remove extra padding */
+  }
+
+  .file-dropdown-container-wrapper,
+  .upload-container {
+    width: 100%; /* Ensure elements take up the full width */
+    text-align: center; /* Center align content */
+    padding: 0; /* Remove padding */
+    margin-bottom: 3px;
+    margin-top: 10px;
+
+   
+  }
+  .select-csv-text{
+    display: none;
+  }
+  .upload-csv-text{
+    display: none;
+  }
+  
+  .file-dropdown-container h5,
+  .upload-container h5 {
+    margin-bottom: 5px; /* Consistent spacing below headings */
+    text-align: left; /* Align text to the left for better readability */
+  }
+
+  .file-dropdown-container select,
+  .upload-container input,
+  .upload-container button {
+    width: 100%; /* Full-width dropdown, input, and button */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+    margin: 0; /* Remove margin */
+  }
+
+  .upload-container form {
+    flex-direction: column; /* Stack input and button vertically */
+    gap: 10px; /* Space between input and button */
+    align-items: stretch; /* Ensure full-width alignment */
+    padding: 0; /* Remove padding */
+  }
+
+  .choose-file-button,
+  .upload-button {
+    width: 100%; /* Full-width buttons in mobile view */
+    padding: 10px; /* Add consistent padding */
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+
+  .chart-alarm-container {
+    display: flex;
+    flex-direction: column; /* Stack line chart and alarm data vertically on small screens */
+    gap: 10px; /* Reduce space between chart and alarm data */
+    align-items: stretch; /* Ensure full-width alignment */
+    width: 100%; /* Full width */
+    padding: 0; /* Remove padding */
+  }
+
+  .line-chart-container {
+    width: 100%; /* Full width for the line chart in mobile view */
+    margin: 0; /* Remove margin */
+    padding: 0; /* Remove padding */
+    overflow: hidden; /* Hide any overflow to ensure a clean look */
+  }
+
+  .alarm-data-container {
+    width: 100%; /* Full width for alarm data in mobile view */
+    padding: 0; /* Remove padding */
+  }
+
+  .alarm-data {
+    text-align: left; /* Align alarm data to the left for better readability */
+    margin-bottom: 5px; /* Reduced space between alarm data items */
+  }
+
+  .custom-button {
+    width: 100%; /* Make buttons full-width */
+    padding: 8px; /* Adjust padding */
   }
 }
