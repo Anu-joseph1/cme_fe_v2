@@ -15,7 +15,7 @@
 
 @media (max-width: 768px) {
   .main-content {
-    max-width: 80%; /* Use full width for small screens */
+    max-width: 100%; /* Use full width for small screens */
   }
 
   .main-content.shifted {

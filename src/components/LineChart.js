@@ -5,55 +5,40 @@ import axios from "axios";
 const LineChart = ({ fileName }) => {
   const [chartData, setChartData] = useState(null);
   const chartRef = useRef(null);
+  const [layout, setLayout] = useState(null);
 
-  const adjustLayoutForView = (layout) => {
-    if (window.innerWidth <= 768) {
-      // Mobile view adjustments
-      return {
-        ...layout,
-        title: "", // Hide chart title
-        yaxis: {
-          ...layout.yaxis,
-          title: "", // Hide Y-axis title
-        },
-        legend: {
-          ...layout.legend,
-          orientation: "h", // Horizontal legend
-          x: 0.5, // Center the legend horizontally
-          y: -0.3, // Position legend below the chart
-          xanchor: "center",
-        },
-      };
-    }
-    // Desktop view
+  const adjustLayoutForView = (baseLayout) => {
+    const isMobile = window.innerWidth <= 768;
     return {
-      ...layout,
-      title: "Sensor Data Over Time", // Show chart title
-      yaxis: {
-        ...layout.yaxis,
-        title: "Sensor Values", // Show Y-axis title
-      },
+      ...baseLayout,
+      title: isMobile ? "" : "Sensor Data Over Time",
+      yaxis: { ...baseLayout.yaxis, title: isMobile ? "" : "Sensor Values" },
       legend: {
-        ...layout.legend,
-        orientation: "v", // Vertical legend
-        x: 1.05, // Position to the right
-        y: 1,
+        ...baseLayout.legend,
+        orientation: isMobile ? "h" : "v",
+        x: isMobile ? 0.5 : 1.05,
+        y: isMobile ? -0.3 : 1,
+        xanchor: isMobile ? "center" : "left",
       },
+      autosize: true,
+      width: isMobile ? window.innerWidth * 0.9 : null, // Increased width for mobile
+      height: isMobile ? window.innerHeight * 0.6 : 700, // Adjust height for mobile
+      // margin: {
+      //   l: isMobile ? 10 : 40,
+      // },
     };
   };
+  
 
   const fetchData = async () => {
     try {
       const response = await axios.get(
         "https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data",
-        {
-          params: { file_name: fileName },
-        }
+        { params: { file_name: fileName } }
       );
+
       const rawData = response.data;
-
       const xValues = rawData.map((item) => item.TIME);
-
       const yKeys = Object.keys(rawData[0]).filter((key) =>
         key.startsWith("DO")
       );
@@ -68,7 +53,7 @@ const LineChart = ({ fileName }) => {
         name: key,
       }));
 
-      const layout = {
+      const baseLayout = {
         xaxis: {
           title: "Time",
           showgrid: true,
@@ -85,36 +70,21 @@ const LineChart = ({ fileName }) => {
         legend: {
           font: { size: 12 },
         },
-        height: 700,
-        autosize: true,
         margin: {
-          l: 40, // Left margin
-          r: 40, // Right margin
-          // t: 60, // Top margin
-          b: 35, // Bottom margin
+          l: 40,
+          r: 10,
+          b: 35,
         },
       };
 
-      // Adjust layout for the current view (desktop or mobile)
-      const adjustedLayout = adjustLayoutForView(layout);
-      setChartData({ traces, layout: adjustedLayout });
+      const adjustedLayout = adjustLayoutForView(baseLayout);
+
+      setChartData(traces);
+      setLayout(adjustedLayout);
     } catch (error) {
       console.error("Error fetching chart data:", error);
     }
   };
-
-  useEffect(() => {
-    fetchData();
-    const handleResize = () => {
-      if (chartData) {
-        const updatedLayout = adjustLayoutForView(chartData.layout);
-        Plotly.relayout(chartRef.current, updatedLayout); // Update layout dynamically
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, [fileName, chartData]);
 
   const generateColor = (index) => {
     const colors = [
@@ -125,8 +95,12 @@ const LineChart = ({ fileName }) => {
   };
 
   useEffect(() => {
-    if (chartData) {
-      Plotly.newPlot(chartRef.current, chartData.traces, chartData.layout, {
+    fetchData();
+  }, [fileName]);
+
+  useEffect(() => {
+    if (chartData && layout) {
+      Plotly.react(chartRef.current, chartData, layout, {
         responsive: true,
         scrollZoom: true,
         displayModeBar: true,
@@ -134,16 +108,16 @@ const LineChart = ({ fileName }) => {
       });
     }
 
-    return () => {
-      if (chartRef.current) {
-        Plotly.purge(chartRef.current);
+    const handleResize = () => {
+      if (layout) {
+        const updatedLayout = adjustLayoutForView(layout);
+        setLayout(updatedLayout);
       }
     };
-  }, [chartData]);
 
-  if (!chartData) {
-    return <div>Loading chart...</div>;
-  }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [chartData, layout]);
 
   return (
     <div className="linechart-wrapper">
