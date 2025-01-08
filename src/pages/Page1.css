@@ -217,7 +217,8 @@
     flex-direction: column; /* Stack elements vertically in mobile view */
     gap: 10px; /* Add space between the stacked elements */
     align-items: stretch; /* Ensure full-width alignment */
-    padding: 0; /* Remove extra padding */
+    padding: 5; /* Remove extra padding */
+    
   }
 
   .file-dropdown-container-wrapper,
