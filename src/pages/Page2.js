@@ -3,20 +3,19 @@ import axios from "axios";
 import LineChart from "../components/LineChart";
 import Alarm from "../components/Alarm";
 import dayjs from "dayjs";
-import './Page2.css';
+import "./Page2.css";
 
-const Page2 = () => {
+const Page2 = ({ showDropdown }) => {
   const [startDateTime, setStartDateTime] = useState(dayjs().subtract(6, "hour"));
   const [endDateTime, setEndDateTime] = useState(dayjs());
-  const [csvFiles, setCsvFiles] = useState([]); // List of CSV files
-  const [selectedFile, setSelectedFile] = useState(null); // Selected file
+  const [csvFiles, setCsvFiles] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
-    // Fetch the list of CSV files from the backend
     const fetchCsvFiles = async () => {
       try {
         const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files");
-        setCsvFiles(response.data.csv_files); // Assumes API returns { csv_files: [] }
+        setCsvFiles(response.data.csv_files);
       } catch (error) {
         console.error("Error fetching CSV files:", error);
       }
@@ -26,31 +25,31 @@ const Page2 = () => {
   }, []);
 
   const handleDropdownChange = (event) => {
-    // Set the selected file from the dropdown list
-    const selectedFileName = event.target.value;
-    setSelectedFile(selectedFileName);
+    setSelectedFile(event.target.value);
   };
 
   return (
     <div className="page2-container">
-      {/* Dropdown for CSV Files */}
-      <div className="file-dropdown-container">
-        <h2>Select a CSV File:</h2>
-        <select
-          value={selectedFile || ""}
-          onChange={handleDropdownChange}
-          className="file-dropdown"
-        >
-          <option value="" disabled>
-            -- Choose a file --
-          </option>
-          {csvFiles.map((file, index) => (
-            <option key={index} value={file}>
-              {file}
+      {/* Conditionally render the dropdown */}
+      {showDropdown && (
+        <div className="file-dropdown-container">
+          <h2>Select a CSV File:</h2>
+          <select
+            value={selectedFile || ""}
+            onChange={handleDropdownChange}
+            className="file-dropdown"
+          >
+            <option value="" disabled>
+              -- Choose a file --
             </option>
-          ))}
-        </select>
-      </div>
+            {csvFiles.map((file, index) => (
+              <option key={index} value={file}>
+                {file}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Display content when a file is selected */}
       {selectedFile && (

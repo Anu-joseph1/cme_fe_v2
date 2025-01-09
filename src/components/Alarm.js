@@ -9,8 +9,16 @@ const Alarm = ({ fileName }) => {
   useEffect(() => {
     const fetchAlarmData = async () => {
       try {
-        const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data_alarm", {
-          params: { file_name: fileName }
+        const token = localStorage.getItem("authToken");
+        console.log("token csv: ", token)
+        // const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data_alarm", {
+        const response = await axios.get("https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data_alarm", {
+          params: { file_name: fileName },
+          headers: {
+            Authorization: `Bearer ${token}`, // Add token to Authorization header
+            "Content-Type": "application/json", // Optional: Set content type if required
+          },
+
         });
         console.log("Alarm Data:", response.data);
         setAlarmData(response.data); // Store the API response

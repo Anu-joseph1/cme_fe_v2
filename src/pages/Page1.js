@@ -18,17 +18,28 @@ const Page1 = () => {
 
   const fetchCsvFiles = async () => {
     try {
-      const response = await fetch("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files"); // Update with your backend URL
+      const token = localStorage.getItem("authToken");
+      console.log("token csv: ", token)
+      // const response = await fetch("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files"); // Update with your backend URL
+      const response = await fetch("https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/csv_files",{
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to Authorization header
+          "Content-Type": "application/json", // Optional: Set content type if required
+        },
+      });
       if (!response.ok) {
         console.error("Failed to fetch CSV files:", response.statusText);
         return;
       }
 
       const { csv_files } = await response.json();
+      console.log("CSV Files Fetched:", csv_files);
+
       if (csv_files && csv_files.length > 0) {
         setCsvFiles(csv_files);
 
         const latestFile = getLatestFile(csv_files);
+        console.log("Latest File Selected:", latestFile);
         setFileName(latestFile);
         fetchFileData(latestFile);
       } else {
@@ -51,7 +62,17 @@ const Page1 = () => {
 
   const fetchFileData = async (selectedFile) => {
     try {
+      // const token = localStorage.getItem("authToken");
+      // console.log("Fetching data for file:", selectedFile, "with token:", token);
+      // console.log("token csv: ", token)
       const response = await fetch(`https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data?file_name=${selectedFile}`);
+      // const response = await fetch("https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data?file_name=${selectedFile}",{
+      //   headers: {
+      //     Authorization: `Bearer ${token}`, // Add token to Authorization header
+      //     "Content-Type": "application/json", // Optional: Set content type if required
+      //   },
+      // });
+      
       if (!response.ok) {
         console.error("Failed to fetch file data:", response.statusText);
         return;
@@ -87,10 +108,24 @@ const Page1 = () => {
     formData.append("userid", "12345"); // Replace with actual user ID
     formData.append("new_filename", selectedFile.name); // Optional new filename
 
+
+    
     try {
-      const response = await fetch("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/upload/", {
+      const token = localStorage.getItem("authToken");
+      console.log("token upload: ", token)
+
+      if (!token) {
+        setUploadMessage("Token missing. Please log in again.");
+        setShowPopup(true);
+        return;
+      }
+  
+      const response = await fetch("https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/upload", {
         method: "POST",
         body: formData,
+        headers: {
+          Authorization: `Bearer ${token}`, // Token added to the headers
+        },
       });
 
       if (response.ok) {
