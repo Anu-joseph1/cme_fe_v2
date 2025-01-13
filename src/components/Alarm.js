@@ -4,26 +4,28 @@ import './Alarm.css';
 
 const Alarm = ({ fileName }) => {
   const [alarmData, setAlarmData] = useState([]);
-  const [selectedAlarm, setSelectedAlarm] = useState(null); // To track the alarm for the popup
+  const [selectedAlarm, setSelectedAlarm] = useState(null);
 
   useEffect(() => {
     const fetchAlarmData = async () => {
       try {
         const token = localStorage.getItem("authToken");
-        console.log("token csv: ", token)
-        // const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data_alarm", {
-        const response = await axios.get("https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data_alarm", {
-          params: { file_name: fileName },
-          headers: {
-            Authorization: `Bearer ${token}`, // Add token to Authorization header
-            "Content-Type": "application/json", // Optional: Set content type if required
-          },
+        console.log("Token for Alarm Data:", token);
 
-        });
-        console.log("Alarm Data:", response.data);
-        setAlarmData(response.data); // Store the API response
+        const response = await axios.get(
+          `https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data_alarm?file_name=${encodeURIComponent(fileName)}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data = response.data;
+        console.log("Alarm Data:", data);
+        setAlarmData(data);
       } catch (error) {
-        console.error("Error fetching alarm data:", error);
+        console.error("Error fetching alarm data:", error.message);
       }
     };
 
@@ -33,17 +35,17 @@ const Alarm = ({ fileName }) => {
   }, [fileName]);
 
   const formatTimestamp = (timestamp) => {
-    if (!timestamp) return 'N/A'; // If no timestamp, return 'N/A'
-    const date = new Date(timestamp * 1000); // Convert Unix timestamp to milliseconds
-    return date.toLocaleString(); // Format it to a readable string
+    if (!timestamp) return 'N/A';
+    const date = new Date(timestamp * 1000);
+    return date.toLocaleString();
   };
 
   const handleRowClick = (alarm) => {
-    setSelectedAlarm(alarm); // Set the selected alarm for the popup
+    setSelectedAlarm(alarm);
   };
 
   const closePopup = () => {
-    setSelectedAlarm(null); // Clear the selected alarm to close the popup
+    setSelectedAlarm(null);
   };
 
   if (!alarmData.length) {
@@ -64,7 +66,7 @@ const Alarm = ({ fileName }) => {
           <tbody>
             {alarmData.map((alarm, index) => (
               <tr key={index} onClick={() => handleRowClick(alarm)} style={{ cursor: 'pointer' }}>
-                <td className="alarm-name-container">{alarm.alarm}</td>
+                <td>{alarm.alarm}</td>
                 <td>{formatTimestamp(alarm.appeared_at)}</td>
                 <td>{formatTimestamp(alarm.disappeared_at)}</td>
               </tr>
