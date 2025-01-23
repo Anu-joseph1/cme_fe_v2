@@ -5,48 +5,78 @@ import Alarm from "../components/Alarm";
 import "./Page1.css";
 
 const Page1 = () => {
-  const [csvFiles, setCsvFiles] = useState([]); // List of CSV files
-  const [fileName, setFileName] = useState(null); // Selected file
-  const [csvData, setCsvData] = useState([]); // Data for the selected file
-  const [selectedFile, setSelectedFile] = useState(null); // File selected for upload
-  const [uploadMessage, setUploadMessage] = useState(""); // Message after upload
-  const [showPopup, setShowPopup] = useState(false); // Popup visibility
+  const [csvFiles, setCsvFiles] = useState([]);
+  const [fileName, setFileName] = useState(null);
+  const [csvData, setCsvData] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploadMessage, setUploadMessage] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [loadingChart, setLoadingChart] = useState(false);
+  const [loadingAlarm, setLoadingAlarm] = useState(false);
+  const [users, setUsers] = useState([]); // List of users
+  const [selectedUser, setSelectedUser] = useState(null); // Selected user
+  const [isAdmin, setIsAdmin] = useState(false); // Admin status
 
   useEffect(() => {
     fetchCsvFiles();
+    fetchUsers();
   }, []);
 
   const fetchCsvFiles = async () => {
     try {
       const token = localStorage.getItem("authToken");
-      console.log("token csv: ", token)
-      // const response = await fetch("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files"); // Update with your backend URL
-      const response = await fetch("https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/csv_files",{
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to Authorization header
-          "Content-Type": "application/json", // Optional: Set content type if required
-        },
-      });
+      const response = await fetch(
+        "https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/csv_files",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
       if (!response.ok) {
         console.error("Failed to fetch CSV files:", response.statusText);
         return;
       }
 
       const { csv_files } = await response.json();
-      console.log("CSV Files Fetched:", csv_files);
-
       if (csv_files && csv_files.length > 0) {
         setCsvFiles(csv_files);
-
         const latestFile = getLatestFile(csv_files);
-        console.log("Latest File Selected:", latestFile);
-        setFileName(latestFile);
-        fetchFileData(latestFile);
+        setFileName(latestFile.filename);
+        fetchFileData(latestFile.filename);
       } else {
         console.error("No CSV files available.");
       }
+
+      // Check if the user is an admin
+      const isAdmin = csv_files.some((file) => file.username === "admin");
+      setIsAdmin(isAdmin);
     } catch (error) {
       console.error("Error fetching CSV files:", error);
+    }
+  };
+
+  const fetchUsers = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        "https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/secure-data",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        console.error("Failed to fetch users:", response.statusText);
+        return;
+      }
+      const { username, groups } = await response.json();
+      setUsers([{ id: username, name: username }]);
+    } catch (error) {
+      console.error("Error fetching users:", error);
     }
   };
 
@@ -56,23 +86,26 @@ const Page1 = () => {
         const timestamp = fileName.match(/\d{14}/);
         return timestamp ? dayjs(timestamp[0], "YYYYMMDDHHmmss").valueOf() : 0;
       };
-      return getTimestamp(b) - getTimestamp(a);
+      return getTimestamp(b.filename) - getTimestamp(a.filename);
     })[0];
   };
 
   const fetchFileData = async (selectedFile) => {
     try {
-       const token = localStorage.getItem("authToken");
-       console.log("Fetching data for file:", selectedFile, "with token:", token);
-       console.log("token csv: ", token)
-       //const response = await fetch(`https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/data?file_name=${selectedFile}`);
-       const response = await fetch(`https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data?file_name=${selectedFile}`,{
-        headers: {
-         Authorization: `Bearer ${token}`, // Add token to Authorization header
-         "Content-Type": "application/json", // Optional: Set content type if required
-        },
-       });
-      
+      setLoadingChart(true);
+      setLoadingAlarm(true);
+
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data?file_name=${selectedFile}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
       if (!response.ok) {
         console.error("Failed to fetch file data:", response.statusText);
         return;
@@ -82,6 +115,9 @@ const Page1 = () => {
       setCsvData(data);
     } catch (error) {
       console.error("Error fetching file data:", error);
+    } finally {
+      setLoadingChart(false);
+      setLoadingAlarm(false);
     }
   };
 
@@ -89,6 +125,10 @@ const Page1 = () => {
     const selectedFile = event.target.value;
     setFileName(selectedFile);
     fetchFileData(selectedFile);
+  };
+
+  const handleUserChange = (event) => {
+    setSelectedUser(event.target.value);
   };
 
   const handleFileChange = (event) => {
@@ -105,33 +145,32 @@ const Page1 = () => {
 
     const formData = new FormData();
     formData.append("file", selectedFile);
-    formData.append("userid", "12345"); // Replace with actual user ID
-    formData.append("new_filename", selectedFile.name); // Optional new filename
+    formData.append("userid", selectedUser);
+    formData.append("new_filename", selectedFile.name);
 
-
-    
     try {
       const token = localStorage.getItem("authToken");
-      console.log("token upload: ", token)
-
       if (!token) {
         setUploadMessage("Token missing. Please log in again.");
         setShowPopup(true);
         return;
       }
-  
-      const response = await fetch(`https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/upload/`, {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`, // Token added to the headers
-        },
-      });
+
+      const response = await fetch(
+        `https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/upload/`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
         setUploadMessage(data.message);
-        fetchCsvFiles();
+        fetchCsvFiles(); // Refresh file list and data automatically
       } else {
         const errorData = await response.json();
         setUploadMessage(`Upload failed: ${errorData.detail}`);
@@ -146,7 +185,6 @@ const Page1 = () => {
   return (
     <div className="dashboard">
       <div className="top-section">
-        {/* Dropdown and File Name container */}
         <div className="file-dropdown-container-wrapper">
           <div className="file-dropdown-container">
             <h5 className="select-csv-text">Select a CSV File:</h5>
@@ -159,25 +197,50 @@ const Page1 = () => {
                 -- Choose a file --
               </option>
               {csvFiles.map((file, index) => (
-                <option key={index} value={file}>
-                  {file}
+                <option key={index} value={file.filename}>
+                  {file.filename}
                 </option>
               ))}
             </select>
           </div>
         </div>
 
-        {/* File Upload Section */}
+        {isAdmin && (
+          <div className="user-dropdown-container">
+            <h5 className="select-user-text">Choose a User:</h5>
+            <select
+              value={selectedUser || ""}
+              onChange={handleUserChange}
+              className="user-dropdown"
+            >
+              <option value="" disabled>
+                -- Choose a user --
+              </option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <div className="upload-container">
           <h5 className="upload-csv-text">Upload a CSV File:</h5>
           <form onSubmit={handleFileUpload}>
-            <input type="file" accept=".csv" onChange={handleFileChange} className="choose-file-button"/>
-            <button type="submit" className="upload-button custom-button">Upload </button>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleFileChange}
+              className="choose-file-button"
+            />
+            <button type="submit" className="upload-button custom-button">
+              Upload
+            </button>
           </form>
         </div>
       </div>
 
-      {/* Popup for Upload Message */}
       {showPopup && (
         <div className="popup-overlay" onClick={() => setShowPopup(false)}>
           <div className="popup">
@@ -189,17 +252,21 @@ const Page1 = () => {
 
       <div className="content-container">
         <div className="chart-section">
-          {csvData.length > 0 ? (
+          {loadingChart ? (
+            <p>Loading chart data...</p>
+          ) : csvData.length > 0 ? (
             <LineChart fileName={fileName} data={csvData} />
           ) : (
-            <p>Loading chart data...</p>
+            <p>No chart data available.</p>
           )}
         </div>
         <div className="alarm-section">
-          {csvData.length > 0 ? (
+          {loadingAlarm ? (
+            <p>Loading alarm data...</p>
+          ) : csvData.length > 0 ? (
             <Alarm fileName={fileName} alarmData={csvData} />
           ) : (
-            <p>Loading alarm data...</p>
+            <p>No alarm data available.</p>
           )}
         </div>
       </div>

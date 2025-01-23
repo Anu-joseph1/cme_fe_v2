@@ -5,31 +5,39 @@ import Alarm from "../components/Alarm";
 import dayjs from "dayjs";
 import "./Page2.css";
 
-const Page2 = ({ showDropdown }) => {
+const Page2 = ({ showDropdown, user, signOut }) => {
   const [startDateTime, setStartDateTime] = useState(dayjs().subtract(6, "hour"));
   const [endDateTime, setEndDateTime] = useState(dayjs());
   const [csvFiles, setCsvFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
 
-  useEffect(() => {
-    const fetchCsvFiles = async () => {
-      try {
-        const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files");
-        setCsvFiles(response.data.csv_files);
-      } catch (error) {
-        console.error("Error fetching CSV files:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCsvFiles = async () => {
+  //     try {
+  //       const response = await axios.get("https://v36ua2mw2spxphztmdrwb5tahi0pltwl.lambda-url.ap-south-1.on.aws/csv_files");
+  //       setCsvFiles(response.data.csv_files);
+  //     } catch (error) {
+  //       console.error("Error fetching CSV files:", error);
+  //     }
+  //   };
 
-    fetchCsvFiles();
-  }, []);
+  //   fetchCsvFiles();
+  // }, []);
 
-  const handleDropdownChange = (event) => {
-    setSelectedFile(event.target.value);
-  };
+   const handleDropdownChange = (event) => {
+     setSelectedFile(event.target.value);
+   };
 
   return (
     <div className="page2-container">
+      {/* User Info and Sign Out Button */}
+      <div className="user-info">
+        <h1>Welcome, {user?.username}</h1>
+        <button onClick={signOut} className="sign-out-button">
+          Sign Out
+        </button>
+      </div>
+
       {/* Conditionally render the dropdown */}
       {showDropdown && (
         <div className="file-dropdown-container">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Amplify } from "aws-amplify";
-import { fetchAuthSession } from "@aws-amplify/auth"; // Correct import for fetchAuthSession
+import { fetchAuthSession } from "@aws-amplify/auth";
 import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import awsExports from "./aws-exports";
@@ -57,7 +57,7 @@ const App = () => {
   }, []);
 
   return (
-    <Authenticator>
+    <Authenticator hideSignUp={true}>
       {({ signOut, user }) => (
         <div>
           <TopBar toggleNav={toggleNav} logoSrc={bemllogo} />
@@ -65,20 +65,7 @@ const App = () => {
           <div className={`main-content ${isOpen ? "shifted" : ""}`}>
             <Routes>
               <Route path="/page1" element={<Page1 showDropdown={true} />} />
-              <Route
-                path="/page2"
-                element={
-                  <div>
-                    <div style={{ padding: "10px" }}>
-                      <h1>Welcome, {user.username}</h1>
-                      <button onClick={signOut} style={{ marginBottom: "20px" }}>
-                        Sign out
-                      </button>
-                    </div>
-                    <Page2 showDropdown={false} />
-                  </div>
-                }
-              />
+              <Route path="/page2" element={<Page2 showDropdown={false} user={user} signOut={signOut} />} />
             </Routes>
           </div>
         </div>
