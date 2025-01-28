@@ -33,33 +33,38 @@ const LineChart = ({ fileName }) => {
       // Construct the URL with query parameters
       const url = new URL(`https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data`);
       const params = { file_name: fileName };
-      url.search = new URLSearchParams(params).toString(); // Add query parameters to the URL
+      url.search = new URLSearchParams(params).toString();
 
       const response = await fetch(url, {
-        method: "GET", 
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
 
-      // Check if the response is successful
       if (response.ok) {
-        const data = await response.json(); // Parse the JSON response
+        const data = await response.json();
         console.log("Line chart data: ", data);
 
-        const rawData = data;  // The response data (adjust this if the structure is different)
+        // Filter and map the data for the chart
+        const rawData = data.map((item) => {
+          return {
+            TIME: item.TIME,
+            TEMPPV: item.TEMPPV,
+            TEMPSV: item.TEMPSV,
+            TEMPCSV: item.TEMPCSV,
+            RHPV: item.RHPV,
+            RHSV: item.RHSV,
+          };
+        });
 
-        // Extract x and y values
         const xValues = rawData.map((item) => item.TIME);
-        const yKeys = Object.keys(rawData[0]).filter((key) =>
-          key.startsWith("DO")  // Assuming you're interested in keys that start with "DO"
-        );
+        const yKeys = Object.keys(rawData[0]).filter((key) => key !== "TIME");
 
-        // Generate traces for each key
         const traces = yKeys.map((key, index) => ({
           x: xValues,
-          y: rawData.map((item) => item[key] ?? 0),  // Use `0` if value is missing
+          y: rawData.map((item) => item[key] ?? 0),
           type: "scatter",
           mode: "lines+markers",
           marker: { color: generateColor(index) },
@@ -67,7 +72,6 @@ const LineChart = ({ fileName }) => {
           name: key,
         }));
 
-        // Layout settings
         const baseLayout = {
           xaxis: {
             title: "Time",
@@ -95,7 +99,6 @@ const LineChart = ({ fileName }) => {
         const adjustedLayout = adjustLayoutForView(baseLayout);
         setChartData(traces);
         setLayout(adjustedLayout);
-
       } else {
         throw new Error("Failed to fetch line chart data");
       }
@@ -116,7 +119,7 @@ const LineChart = ({ fileName }) => {
     if (fileName) {
       fetchData();
     }
-  }, [fileName]); // Use the fileName as a dependency
+  }, [fileName]);
 
   useEffect(() => {
     if (chartData && layout) {
