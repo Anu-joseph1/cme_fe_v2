@@ -24,19 +24,18 @@
   align-items: stretch;
 }
 
-/* Mobile Adjustments */
 @media (max-width: 768px) {
   .linechart-container {
-    max-width: 90vw; /* Increased width for tablets and phones */
-    max-height: 60vh; /* Adjusted for tablets and phones */
-    padding: 10px; /* Reduced padding */
+    max-width: 90vw;
+    max-height: 60vh;
+    padding: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .linechart-container {
-    max-width: 95vw; /* Increased width for small phones */
-    max-height: 50vh; /* Adjusted for small phones */
-    padding: 5px; /* Minimal padding for smaller screens */
+    max-width: 95vw;
+    max-height: 50vh;
+    padding: 5px;
   }
 }

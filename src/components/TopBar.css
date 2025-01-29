@@ -16,6 +16,7 @@
 
 .hamburger-menu {
   font-size: 24px;
+  margin-left: 5px;
   cursor: pointer;
 }
 
@@ -28,7 +29,7 @@
 .logo {
   height: 40px;
   /* Adjust as needed */
-  margin-right: 30px;
+  margin-right: 20px;
   margin-bottom: 8px;
 }
 
@@ -47,14 +48,14 @@
 }
 
 .icon {
-  margin-right: 20px;
+  margin-right: 20px; /* Increased margin to move it a little further */
   font-size: 20px;
   cursor: pointer;
 }
 
+/* Optional: Adjust margin for smaller screens */
 @media (max-width: 400px) {
-  .company-name {
-    display: none;
-    /* No margin for small screens */
+  .icon {
+    margin-right: 15px; /* Smaller margin for small screens */
   }
 }

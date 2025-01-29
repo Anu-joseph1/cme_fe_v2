@@ -9,22 +9,22 @@
 }
 
 .top-section {
-  display: flex; /* Horizontal layout for dropdown and upload sections */
-  justify-content: space-between; /* Spread elements evenly across the container */
+  display: flex;
+  justify-content: space-between; /* Space elements evenly across the container */
   align-items: center; /* Vertically align elements */
-  padding: 1px 10px 1px 10px; /* Add some padding around the section */
-  gap: 5px; /* Space between dropdown and upload sections */
-  background-color: #f9f9f9; /* Optional: Add a subtle background */
-  border-radius: 8px; /* Rounded corners for better aesthetics */
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for emphasis */
+  padding: 10px ; /* Adjust padding for spacing */
+  gap: 20px; /* Space between sections */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Container to hold the file dropdown and file name */
 .file-dropdown-container-wrapper {
-  display: flex; /* Flex layout for better alignment */
-  align-items: center; /* Vertically align content */
-  gap: 10px; /* Add space between elements */
-  flex: 1; /* Allow this section to grow */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align to the start */
+  flex: 1; /* Allow growth */
 }
 
 /* Dropdown container for file selection */
@@ -48,7 +48,34 @@
   background-color: #fff;  /* Dropdown background color */
   width: auto;
 }
+
+.user-dropdown-container {
+  display: flex;
+  align-items: center; /* Vertically center */
+  justify-content: center; /* Center horizontally within its parent */
+  /* flex: 1; Allow this section to grow equally */
+  /* gap: 10px; Space between label and dropdown */
+}
+
+.user-dropdown-container h3 {
+  margin: 0; /* Remove extra margin */
+  font-size: 1.2em; /* Adjust font size for consistency */
+  color: #333; /* Optional: Text color */
+}
+
+.user-dropdown {
+  margin-top: 10px;
+  padding: 5px; /* Add padding for better appearance */
+  font-size: 16px; /* Ensure text is readable */
+  border: 1px solid #ccc; /* Add a border */
+  border-radius: 4px; /* Rounded corners for aesthetics */
+  background-color: #fff; /* Dropdown background color */
+  width: 100%; /* Full width within container */
+  max-width: 200px; /* Optional: Restrict max width */
+}
+
 .custom-button {
+  
   background-color: #04AA6D; /* Default green for upload button */
   border: 1px solid #04AA6D;
   color: rgb(255, 255, 255);
@@ -129,11 +156,10 @@
 }
 
 .upload-container {
-  display: flex; /* Horizontal alignment for heading and form */
-  align-items: center; /* Vertically align items */
-  gap: 15px; /* Add space between elements */
-  flex: 1; /* Allow this section to grow */
-  justify-content: flex-start; /* Align the upload section to the right */
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Align to the end */
+  flex: 1; /* Allow growth */
 }
 
 .upload-container h3 {
@@ -223,13 +249,13 @@
 
   .file-dropdown-container-wrapper,
   .upload-container {
-    width: 100%; /* Ensure elements take up the full width */
-    text-align: center; /* Center align content */
-    padding: 0; /* Remove padding */
-    margin-bottom: 3px;
-    margin-top: 10px;
+    width: 100%; /* Full width */
+    justify-content: start; /* Center alignment */
+  }
 
-   
+  .user-dropdown-container {
+    width: 100%; /* Full width */
+    justify-content: start; /* Center alignment */
   }
   .select-csv-text{
     display: none;
@@ -257,6 +283,7 @@
     gap: 10px; /* Space between input and button */
     align-items: stretch; /* Ensure full-width alignment */
     padding: 0; /* Remove padding */
+    
   }
 
   .choose-file-button,
@@ -292,8 +319,29 @@
     margin-bottom: 5px; /* Reduced space between alarm data items */
   }
 
+ 
+
+/* Ensure proper layout in responsive designs */
+@media (max-width: 1082px) {
+  .user-dropdown-container {
+    flex-direction: column; /* Stack label and dropdown vertically */
+    width: 100%;            /* Full-width in mobile view */
+  }
+
+  .user-dropdown {
+    width: 100%;            /* Full-width dropdown in mobile view */
+    box-sizing: border-box; /* Include padding and border in width calculation */
+  }
+
+  .user-dropdown-container h3 {
+    text-align: left ;       /* Align text to the left */
+  }
+}
+
+
+
   .custom-button {
     width: 100%; /* Make buttons full-width */
     padding: 8px; /* Adjust padding */
   }
-}
+}   
