@@ -320,6 +320,27 @@
   }
 
  
+  .popup button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    gap: 10px;
+    margin-right: 10px; /* Add space between buttons */
+  }
+  
+  .popup button:hover {
+    background: #0056b3;
+  }
+  
+  .popup .cancel-button {
+    margin-right: 20px; /* Additional space between cancel and upload buttons */
+  }
+  
+
 
 /* Ensure proper layout in responsive designs */
 @media (max-width: 1082px) {

@@ -30,7 +30,6 @@ const LineChart = ({ fileName }) => {
       const token = localStorage.getItem("authToken");
       console.log("token csv: ", token);
 
-      // Construct the URL with query parameters
       const url = new URL(`https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/data`);
       const params = { file_name: fileName };
       url.search = new URLSearchParams(params).toString();
@@ -47,7 +46,6 @@ const LineChart = ({ fileName }) => {
         const data = await response.json();
         console.log("Line chart data: ", data);
 
-        // Filter and map the data for the chart
         const rawData = data.map((item) => {
           return {
             TIME: item.TIME,
@@ -66,9 +64,9 @@ const LineChart = ({ fileName }) => {
           x: xValues,
           y: rawData.map((item) => item[key] ?? 0),
           type: "scatter",
-          mode: "lines+markers",
+          mode: "lines", // Removed markers
           marker: { color: generateColor(index) },
-          line: { dash: index % 2 === 0 ? "solid" : "dot" },
+          line: { dash: key.includes("SV") ? "dot" : "solid" }, // Setpoints as dotted lines
           name: key,
         }));
 

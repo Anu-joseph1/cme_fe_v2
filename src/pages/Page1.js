@@ -16,6 +16,7 @@ const Page1 = () => {
   const [users, setUsers] = useState([]); // List of users
   const [selectedUser, setSelectedUser] = useState(null); // Selected user
   const [isAdmin, setIsAdmin] = useState(false); // Admin status
+  const [equipmentId, setEquipmentId] = useState(""); // State for equipment ID input
 
   useEffect(() => {
     fetchCsvFiles();
@@ -170,16 +171,27 @@ const Page1 = () => {
       if (response.ok) {
         const data = await response.json();
         setUploadMessage(data.message);
-        fetchCsvFiles(); // Refresh file list and data automatically
+        setShowPopup(true); // Show the equipment ID input pop-up
       } else {
         const errorData = await response.json();
         setUploadMessage(`Upload failed: ${errorData.detail}`);
+        setShowPopup(true);
       }
     } catch (error) {
       setUploadMessage(`Upload failed: ${error.message}`);
-    } finally {
       setShowPopup(true);
     }
+  };
+
+  const handlePopupSubmit = () => {
+    // Handle the equipment ID submission
+    console.log("Equipment ID entered:", equipmentId);
+    setShowPopup(false);
+    // You can send the equipmentId to the server or process it as needed
+  };
+
+  const handlePopupCancel = () => {
+    setShowPopup(false);
   };
 
   return (
@@ -242,10 +254,19 @@ const Page1 = () => {
       </div>
 
       {showPopup && (
-        <div className="popup-overlay" onClick={() => setShowPopup(false)}>
+        <div className="popup-overlay" onClick={handlePopupCancel}>
           <div className="popup">
-            <p>{uploadMessage}</p>
-            <button onClick={() => setShowPopup(false)}>Close</button>
+            <p>Do you want to enter the equipment ID?</p>
+            <input
+              type="text"
+              value={equipmentId}
+              onChange={(e) => setEquipmentId(e.target.value)}
+              placeholder="Enter Equipment ID"
+            />
+            <div className="popup-buttons">
+              <button onClick={handlePopupCancel}>Cancel</button>
+              <button onClick={handlePopupSubmit}>Upload</button>
+            </div>
           </div>
         </div>
       )}
