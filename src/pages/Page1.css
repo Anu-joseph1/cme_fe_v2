@@ -17,6 +17,7 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
 }
 
 /* Container to hold the file dropdown and file name */
@@ -75,7 +76,6 @@
 }
 
 .custom-button {
-  
   background-color: #04AA6D; /* Default green for upload button */
   border: 1px solid #04AA6D;
   color: rgb(255, 255, 255);
@@ -95,6 +95,7 @@
   background-color: #028555; /* Darker green */
   color: #ffffff;
 }
+
 .choose-file-button {
   background-color: #fafafa; /* Grey */
   border: 1px solid #04AA6D;
@@ -147,12 +148,6 @@
   min-width: 300px;
   width: 100%;
   padding: 25px;
-}
-
-.top-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
 }
 
 .upload-container {
@@ -244,7 +239,6 @@
     gap: 10px; /* Add space between the stacked elements */
     align-items: stretch; /* Ensure full-width alignment */
     padding: 5; /* Remove extra padding */
-    
   }
 
   .file-dropdown-container-wrapper,
@@ -283,7 +277,6 @@
     gap: 10px; /* Space between input and button */
     align-items: stretch; /* Ensure full-width alignment */
     padding: 0; /* Remove padding */
-    
   }
 
   .choose-file-button,
@@ -319,7 +312,6 @@
     margin-bottom: 5px; /* Reduced space between alarm data items */
   }
 
- 
   .popup button {
     margin-top: 10px;
     padding: 10px 20px;
@@ -339,30 +331,102 @@
   .popup .cancel-button {
     margin-right: 20px; /* Additional space between cancel and upload buttons */
   }
-  
-
-
-/* Ensure proper layout in responsive designs */
-@media (max-width: 1082px) {
-  .user-dropdown-container {
-    flex-direction: column; /* Stack label and dropdown vertically */
-    width: 100%;            /* Full-width in mobile view */
-  }
-
-  .user-dropdown {
-    width: 100%;            /* Full-width dropdown in mobile view */
-    box-sizing: border-box; /* Include padding and border in width calculation */
-  }
-
-  .user-dropdown-container h3 {
-    text-align: left ;       /* Align text to the left */
-  }
-}
-
-
 
   .custom-button {
     width: 100%; /* Make buttons full-width */
     padding: 8px; /* Adjust padding */
   }
-}   
+}
+
+/* page1 specific styles */
+.top-section {
+  display: flex;
+  justify-content: space-between; /* Space elements evenly */
+  align-items: center; /* Vertically align elements */
+  padding: 10px; /* Adjust padding for spacing */
+  gap: 20px; /* Space between sections */
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+}
+
+.file-dropdown-container-wrapper,
+.upload-container,
+.equipment-id-container {
+  display: flex;
+  align-items: center; /* Vertically align elements */
+  gap: 10px; /* Space between elements */
+  flex: 1; /* Allow growth to fill available space */
+}
+
+.file-dropdown-container,
+.upload-container form,
+.equipment-id-container {
+  display: flex;
+  align-items: center; /* Vertically align elements */
+  gap: 10px; /* Space between elements */
+}
+
+.file-dropdown-container h5,
+.upload-container h5,
+.equipment-id-container h5 {
+  margin: 0; /* Remove default margin */
+  font-size: 1em; /* Adjust font size */
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.file-dropdown,
+.user-dropdown,
+.choose-file-button,
+.equipment-id-input {
+  padding: 5px; /* Add padding for better appearance */
+  font-size: 16px; /* Ensure text is readable */
+  border: 1px solid #ccc; /* Add a border */
+  border-radius: 4px; /* Rounded corners for aesthetics */
+  background-color: #fff; /* Dropdown background color */
+  width: auto; /* Allow width to adjust based on content */
+}
+
+.upload-button {
+  background-color: #04AA6D; /* Green */
+  border: 1px solid #04AA6D;
+  color: white;
+  padding: 5px 10px; /* Adjust padding */
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap; /* Prevent text from wrapping */
+}
+
+.upload-button:hover {
+  background-color: #028555; /* Darker green on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .top-section {
+    flex-direction: column; /* Stack elements vertically on smaller screens */
+    gap: 10px; /* Reduce space between elements */
+  }
+
+  .file-dropdown-container-wrapper,
+  .upload-container,
+  .equipment-id-container {
+    width: 100%; /* Full width on smaller screens */
+    justify-content: flex-start; /* Align elements to the start */
+  }
+
+  .file-dropdown-container h5,
+  .upload-container h5,
+  .equipment-id-container h5 {
+    display: none; /* Hide labels on smaller screens */
+  }
+
+  .file-dropdown,
+  .user-dropdown,
+  .choose-file-button,
+  .equipment-id-input,
+  .upload-button {
+    width: 100%; /* Full width on smaller screens */
+  }
+}

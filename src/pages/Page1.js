@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom"; // Import useLocation
 import dayjs from "dayjs";
 import LineChart from "../components/LineChart";
 import Alarm from "../components/Alarm";
@@ -13,15 +14,58 @@ const Page1 = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [loadingChart, setLoadingChart] = useState(false);
   const [loadingAlarm, setLoadingAlarm] = useState(false);
-  const [users, setUsers] = useState([]); // List of users
-  const [selectedUser, setSelectedUser] = useState(null); // Selected user
-  const [isAdmin, setIsAdmin] = useState(false); // Admin status
-  const [equipmentId, setEquipmentId] = useState(""); // State for equipment ID input
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [equipmentId, setEquipmentId] = useState("");
+
+  const location = useLocation(); // Initialize useLocation
+  const queryParams = new URLSearchParams(location.search);
+  const equip_id = queryParams.get("equip_id"); // Get equip_id from query parameters
 
   useEffect(() => {
     fetchCsvFiles();
     fetchUsers();
   }, []);
+
+  useEffect(() => {
+    if (equip_id) {
+      setEquipmentId(equip_id);
+      fetchCsvFilesByEquipmentId(equip_id);
+    }
+  }, [equip_id]);
+
+  const fetchCsvFilesByEquipmentId = async (equip_id) => {
+    try {
+      const token = localStorage.getItem("authToken");
+      const response = await fetch(
+        `https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/csv_files?equip_id=${equip_id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.error("Failed to fetch CSV files:", response.statusText);
+        return;
+      }
+
+      const { csv_files } = await response.json();
+      if (csv_files && csv_files.length > 0) {
+        setCsvFiles(csv_files);
+        const latestFile = getLatestFile(csv_files);
+        setFileName(latestFile.filename);
+        fetchFileData(latestFile.filename);
+      } else {
+        console.error("No CSV files available.");
+      }
+    } catch (error) {
+      console.error("Error fetching CSV files:", error);
+    }
+  };
 
   const fetchCsvFiles = async () => {
     try {
@@ -35,6 +79,7 @@ const Page1 = () => {
           },
         }
       );
+
       if (!response.ok) {
         console.error("Failed to fetch CSV files:", response.statusText);
         return;
@@ -50,7 +95,6 @@ const Page1 = () => {
         console.error("No CSV files available.");
       }
 
-      // Check if the user is an admin
       const isAdmin = csv_files.some((file) => file.username === "admin");
       setIsAdmin(isAdmin);
     } catch (error) {
@@ -70,6 +114,7 @@ const Page1 = () => {
           },
         }
       );
+
       if (!response.ok) {
         console.error("Failed to fetch users:", response.statusText);
         return;
@@ -136,6 +181,10 @@ const Page1 = () => {
     setSelectedFile(event.target.files[0]);
   };
 
+  const handleEquipmentIdChange = (event) => {
+    setEquipmentId(event.target.value);
+  };
+
   const handleFileUpload = async (event) => {
     event.preventDefault();
     if (!selectedFile) {
@@ -148,6 +197,7 @@ const Page1 = () => {
     formData.append("file", selectedFile);
     formData.append("userid", selectedUser);
     formData.append("new_filename", selectedFile.name);
+    formData.append("equip_id", equipmentId);
 
     try {
       const token = localStorage.getItem("authToken");
@@ -171,27 +221,16 @@ const Page1 = () => {
       if (response.ok) {
         const data = await response.json();
         setUploadMessage(data.message);
-        setShowPopup(true); // Show the equipment ID input pop-up
+        fetchCsvFiles();
       } else {
         const errorData = await response.json();
         setUploadMessage(`Upload failed: ${errorData.detail}`);
-        setShowPopup(true);
       }
     } catch (error) {
       setUploadMessage(`Upload failed: ${error.message}`);
+    } finally {
       setShowPopup(true);
     }
-  };
-
-  const handlePopupSubmit = () => {
-    // Handle the equipment ID submission
-    console.log("Equipment ID entered:", equipmentId);
-    setShowPopup(false);
-    // You can send the equipmentId to the server or process it as needed
-  };
-
-  const handlePopupCancel = () => {
-    setShowPopup(false);
   };
 
   return (
@@ -246,6 +285,16 @@ const Page1 = () => {
               onChange={handleFileChange}
               className="choose-file-button"
             />
+            <div className="equipment-id-container">
+              <h5 className="equipment-id-text"></h5>
+              <input
+                type="text"
+                value={equipmentId}
+                onChange={handleEquipmentIdChange}
+                className="equipment-id-input"
+                placeholder="Enter Equipment ID"
+              />
+            </div>
             <button type="submit" className="upload-button custom-button">
               Upload
             </button>
@@ -254,19 +303,10 @@ const Page1 = () => {
       </div>
 
       {showPopup && (
-        <div className="popup-overlay" onClick={handlePopupCancel}>
+        <div className="popup-overlay" onClick={() => setShowPopup(false)}>
           <div className="popup">
-            <p>Do you want to enter the equipment ID?</p>
-            <input
-              type="text"
-              value={equipmentId}
-              onChange={(e) => setEquipmentId(e.target.value)}
-              placeholder="Enter Equipment ID"
-            />
-            <div className="popup-buttons">
-              <button onClick={handlePopupCancel}>Cancel</button>
-              <button onClick={handlePopupSubmit}>Upload</button>
-            </div>
+            <p>{uploadMessage}</p>
+            <button onClick={() => setShowPopup(false)}>Close</button>
           </div>
         </div>
       )}

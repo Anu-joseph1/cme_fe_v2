@@ -1,0 +1,63 @@
+/* Container for the equipment list */
+.equipment-list-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title for the equipment list */
+  .equipment-list-container h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  /* List items containing equipment IDs */
+  .equipment-list-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .equipment-list-container li {
+    background-color: #e0f7fa; /* Light cyan background for the boxes */
+    margin: 10px 0;
+    padding: 12px 15px;
+    border-radius: 5px;
+    border: 1px solid #0288d1; /* Blue border */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 1.1em;
+    color: #0277bd; /* Blue text */
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s ease-in-out;
+  }
+  
+  /* Hover effect for each item */
+  .equipment-list-container li:hover {
+    background-color: #b2ebf2; /* Slightly darker cyan */
+    transform: translateY(-2px); /* Lift the item slightly */
+  }
+  
+  /* Error message style */
+  .equipment-list-container .error {
+    color: #f44336; /* Red color for errors */
+    font-size: 1.1em;
+    margin-top: 20px;
+  }
+  
+  /* Handle mobile view */
+  @media (max-width: 768px) {
+    .equipment-list-container {
+      padding: 10px;
+    }
+  
+    .equipment-list-container h2 {
+      font-size: 1.3em;
+    }
+  
+    .equipment-list-container li {
+      font-size: 1em;
+      padding: 10px 12px;
+    }
+  }
+  
