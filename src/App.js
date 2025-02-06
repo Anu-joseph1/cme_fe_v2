@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Amplify } from "aws-amplify";
 import { fetchAuthSession, getCurrentUser } from "@aws-amplify/auth";
 import { Authenticator } from "@aws-amplify/ui-react";
-import { Hub } from "@aws-amplify/core"; // Import Hub for auth event listening
+import { Hub } from "@aws-amplify/core";
 import "@aws-amplify/ui-react/styles.css";
 import awsExports from "./aws-exports";
 
@@ -20,15 +20,14 @@ Amplify.configure(awsExports);
 const App = () => {
   const [isOpen, setIsOpen] = useState(window.innerWidth > 768);
   const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Tracks login state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [authChanged, setAuthChanged] = useState(false);
 
-  // Function to toggle the side navigation
   const toggleNav = () => {
     setIsOpen(!isOpen);
   };
 
-  // Adjust side navigation based on window resize
   useEffect(() => {
     const handleResize = () => {
       setIsOpen(window.innerWidth > 768);
@@ -40,12 +39,11 @@ const App = () => {
     };
   }, []);
 
-  // Fetch user data and update state dynamically
   const fetchUser = async () => {
     try {
       const currentUser = await getCurrentUser();
       setUser(currentUser);
-      setIsAuthenticated(true); // User is logged in
+      setIsAuthenticated(true);
 
       const session = await fetchAuthSession();
       const authToken = session.tokens?.idToken?.toString();
@@ -56,40 +54,41 @@ const App = () => {
     } catch (error) {
       console.error("Error fetching user session:", error);
       setUser(null);
-      setIsAuthenticated(false); // User is logged out
+      setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }
   };
 
-  // Fetch user on mount
   useEffect(() => {
     fetchUser();
   }, []);
 
-  // Listen for authentication events (LOGIN / LOGOUT)
   useEffect(() => {
     const authListener = ({ payload }) => {
       if (payload.event === "signIn") {
         console.log("User signed in");
-        fetchUser(); // Update UI immediately after login
-        window.location.reload(); // Force reload after sign in to reflect changes
+        fetchUser();
+        // window.location.reload();
+        setAuthChanged((prev) => !prev); // Toggle state to trigger refresh
       } else if (payload.event === "signOut") {
         console.log("User signed out");
         setUser(null);
         setIsAuthenticated(false);
+        localStorage.removeItem("authToken"); // Clear the auth token
+        setAuthChanged((prev) => !prev); // Toggle state to trigger refresh
       }
     };
 
     const unsubscribe = Hub.listen("auth", authListener);
     return () => {
-      unsubscribe(); // Cleanup listener on unmount
+      unsubscribe();
     };
   }, []);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
   return (
     <Authenticator hideSignUp={true}>
@@ -101,7 +100,8 @@ const App = () => {
             <Routes>
               <Route path="/page1" element={<Page1 showDropdown={true} />} />
               <Route path="/page2" element={<Page2 showDropdown={false} user={user} signOut={signOut} />} />
-              <Route path="/page3" element={<Page3 />} />
+              <Route path="/page3" element={<Page3 resetEquipmentList={signOut} />} />
+              <Route exact path="/" element={<Page3 resetEquipmentList={signOut} />} />
             </Routes>
           </div>
         </div>
