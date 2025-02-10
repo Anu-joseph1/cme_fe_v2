@@ -396,7 +396,7 @@
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap; /* Prevent text from wrapping */
-}
+}z
 
 .upload-button:hover {
   background-color: #028555; /* Darker green on hover */

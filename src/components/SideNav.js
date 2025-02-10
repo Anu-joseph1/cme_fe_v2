@@ -13,7 +13,7 @@ const SideNav = ({ isOpen, toggleNav }) => {
       
       
       <Link to="/page3" className={location.pathname === '/page3' ? 'active' : ''}>Equipment</Link>
-      <Link to="/page1" className={location.pathname === '/page1' ? 'active' : ''}>Files</Link>
+      <Link to="/page1" className={location.pathname === '/page1' ? 'active' : ''}></Link>
       <Link to="/page2" className={location.pathname === '/page2' ? 'active' : ''}>Login</Link> 
        
       
