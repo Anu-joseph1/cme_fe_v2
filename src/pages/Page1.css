@@ -1,120 +1,121 @@
 /* Overall page styles */
 .dashboard {
-  display: flex;           /* Set the parent container as a flex container */
-  flex-direction: column;  /* Stack the controls and content vertically */
-  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
   background-color: #ffffff;
   height: 100%;
-  min-height: 95vh;       /* Ensure the page takes at least the full viewport height */
+  overflow: hidden;
 }
 
 .top-section {
   display: flex;
-  justify-content: space-between; /* Space elements evenly across the container */
-  align-items: center; /* Vertically align elements */
-  padding: 10px ; /* Adjust padding for spacing */
-  gap: 20px; /* Space between sections */
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  gap: 20px;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  flex-wrap: wrap;
 }
 
-/* Container to hold the file dropdown and file name */
-.file-dropdown-container-wrapper {
+/* Container for file dropdown and file name */
+.file-dropdown-container-wrapper,
+.upload-container,
+.equipment-id-container {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align to the start */
-  flex: 1; /* Allow growth */
+  gap: 10px;
+  flex: 1;
 }
 
-/* Dropdown container for file selection */
-.file-dropdown-container {
-  display: flex; /* Align label and dropdown horizontally */
-  align-items: center; /* Vertically align */
-  gap: 10px; /* Add space between label and dropdown */
+.file-dropdown-container,
+.upload-container form,
+.equipment-id-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.file-dropdown-container h3 {
-  margin: 0;               /* Remove default margin from the heading */
-  font-size: 1.2em;        /* Adjust the font size for better visibility */
-  color: #333;             /* Optional: Adjust text color */
+.file-dropdown-container h5,
+.upload-container h5,
+.equipment-id-container h5 {
+  margin: 0;
+  font-size: 1em;
+  white-space: nowrap;
 }
 
-.file-dropdown {
-  padding: 5px;            /* Add padding for dropdown */
-  font-size: 16px;         /* Ensure text is readable */
-  border: 1px solid #ccc;  /* Optional: Add a border */
-  border-radius: 4px;      /* Rounded corners for better aesthetics */
-  background-color: #fff;  /* Dropdown background color */
+
+
+
+.file-dropdown,
+.user-dropdown,
+.choose-file-button,
+.equipment-id-input {
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
   width: auto;
 }
 
 .user-dropdown-container {
   display: flex;
-  align-items: center; /* Vertically center */
-  justify-content: center; /* Center horizontally within its parent */
-  /* flex: 1; Allow this section to grow equally */
-  /* gap: 10px; Space between label and dropdown */
+  align-items: center;
+  justify-content: center;
 }
 
-.user-dropdown-container h3 {
-  margin: 0; /* Remove extra margin */
-  font-size: 1.2em; /* Adjust font size for consistency */
-  color: #333; /* Optional: Text color */
+.user-dropdown-container h5 {
+  margin: 0;
+  font-size: 0.9em;
+  color: #333;
+  white-space: nowrap;
 }
 
 .user-dropdown {
-  margin-top: 10px;
-  padding: 5px; /* Add padding for better appearance */
-  font-size: 16px; /* Ensure text is readable */
-  border: 1px solid #ccc; /* Add a border */
-  border-radius: 4px; /* Rounded corners for aesthetics */
-  background-color: #fff; /* Dropdown background color */
-  width: 100%; /* Full width within container */
-  max-width: 200px; /* Optional: Restrict max width */
-}
-
-.custom-button {
-  background-color: #04AA6D; /* Default green for upload button */
-  border: 1px solid #04AA6D;
-  color: rgb(255, 255, 255);
-  padding: 10px 20px; /* Some padding */
-  text-align: center; /* Centered text */
-  text-decoration: none; /* Remove underline */
-  display: inline-block; /* Get elements to line up */
-  font-size: 16px; /* Increase font size */
-  margin: 5px 10px; /* Some margin */
-  cursor: pointer; /* Pointer/hand icon */
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  padding: 5px;
+  font-size: 0.9em;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  box-shadow: 0 4px 8px 0 rgba(12, 11, 11, 0.2) !important;
+  background-color: #fff;
+  width: auto;
+  max-width: 200px;
 }
 
-.custom-button:hover {
-  background-color: #028555; /* Darker green */
-  color: #ffffff;
+.upload-container form {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .choose-file-button {
-  background-color: #fafafa; /* Grey */
+  background-color: #fafafa;
   border: 1px solid #04AA6D;
-  padding: 2px;
+  padding: 5px 10px;
   border-radius: 3px;
+  font-size: 0.9em;
+  white-space: nowrap;
 }
 
 .choose-file-button:hover {
-  background-color: #6f6f6f; /* Darker grey on hover */
+  background-color: #6f6f6f;
 }
 
-/* Green button for "Upload" */
 .upload-button {
-  background-color: #04AA6D; /* Green */
+  background-color: #04AA6D;
   border: 1px solid #04AA6D;
+  color: rgb(255, 255, 255);
+  padding: 5px 10px;
+  font-size: 0.9em;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .upload-button:hover {
-  background-color: #028555; /* Darker green on hover */
+  background-color: #028555;
 }
 
 /* Unified container for LineChart and Alarm */
@@ -124,60 +125,53 @@
   align-items: flex-start;
   gap: 10px;
   background-color: #ffffff;
-  padding: 0px;
+  padding: 0;
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   flex-wrap: wrap;
   flex-grow: 1;
-  width: 100%;  /* Ensure full width */
+  width: 100%;
+  height: 50%;
   margin-top: 2px;
 }
 
 /* Left section for LineChart */
 .chart-section {
-  flex: 3;  /* Increase the flex-grow to give more space to the chart */
+  flex: 3;
   min-width: 300px;
+  min-height: 300px;
   width: 100%;
-  overflow: auto;
-  padding: 0px;  /* Adjust padding to avoid cramped chart */
+  margin: 0;
+  overflow: visible !important;
+  padding: 0;
+  position: relative;
+}
+
+.chart-section canvas {
+  width: 100% !important;
+  height: auto !important;
+  display: block;
 }
 
 /* Right section for Alarm */
 .alarm-section {
-  flex: 1;  /* Keeps alarm section smaller */
+  flex: 1;
   min-width: 300px;
   width: 100%;
   padding: 25px;
 }
 
-.upload-container {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end; /* Align to the end */
-  flex: 1; /* Allow growth */
-}
-
-.upload-container h3 {
-  margin: 0; /* Remove extra margin for proper alignment */
-}
-
-.upload-container form {
-  display: flex; /* Align input and button horizontally */
-  align-items: center; /* Vertically align */
-  gap: 10px; /* Space between input and button */
-}
-
 .popup-overlay {
-  position: fixed; /* Fixed to the viewport */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
-  align-items: center; /* Center vertically and horizontally */
-  z-index: 1000; /* Ensure it appears above all other content */
+  align-items: center;
+  z-index: 1000;
 }
 
 .popup {
@@ -186,7 +180,7 @@
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: center;
-  width: 300px; /* Adjust as needed */
+  width: 300px;
 }
 
 .popup button {
@@ -203,230 +197,154 @@
   background: #0056b3;
 }
 
-/* Desktop view */
-@media (min-width: 769px) {
-  .chart-alarm-container {
-    display: flex;
-    flex-direction: row; /* Arrange the line chart and alarm data side by side */
-    justify-content: space-between; /* Space out the line chart and alarm data */
-    gap: 20px; /* Add space between chart and alarm data */
-    align-items: flex-start; /* Align at the top */
-    width: 100%; /* Full width */
-  }
-
-  .line-chart-container {
-    flex: 1; /* Take available space */
-    max-width: 50%; /* Ensure the chart doesn't take more than 50% of the space */
-  }
-
-  .alarm-data-container {
-    flex: 1; /* Take available space */
-    max-width: 50%; /* Ensure alarm data takes up the other 50% */
-    display: flex;
-    flex-direction: column; /* Stack alarm data items vertically */
-  }
-
-  .alarm-data {
-    text-align: left; /* Align alarm data to the left */
-    margin-bottom: 10px; /* Space between alarm data items */
-  }
-}
-
-/* Mobile view */
+/* Responsive Design */
 @media (max-width: 1082px) {
   .top-section {
-    flex-direction: column; /* Stack elements vertically in mobile view */
-    gap: 10px; /* Add space between the stacked elements */
-    align-items: stretch; /* Ensure full-width alignment */
-    padding: 5; /* Remove extra padding */
-  }
-
-  .file-dropdown-container-wrapper,
-  .upload-container {
-    width: 100%; /* Full width */
-    justify-content: start; /* Center alignment */
-  }
-
-  .user-dropdown-container {
-    width: 100%; /* Full width */
-    justify-content: start; /* Center alignment */
-  }
-  .select-csv-text{
-    display: none;
-  }
-  .upload-csv-text{
-    display: none;
-  }
-  
-  .file-dropdown-container h5,
-  .upload-container h5 {
-    margin-bottom: 5px; /* Consistent spacing below headings */
-    text-align: left; /* Align text to the left for better readability */
-  }
-
-  .file-dropdown-container select,
-  .upload-container input,
-  .upload-container button {
-    width: 100%; /* Full-width dropdown, input, and button */
-    box-sizing: border-box; /* Include padding and border in width calculation */
-    margin: 0; /* Remove margin */
-  }
-
-  .upload-container form {
-    flex-direction: column; /* Stack input and button vertically */
-    gap: 10px; /* Space between input and button */
-    align-items: stretch; /* Ensure full-width alignment */
-    padding: 0; /* Remove padding */
-  }
-
-  .choose-file-button,
-  .upload-button {
-    width: 100%; /* Full-width buttons in mobile view */
-    padding: 10px; /* Add consistent padding */
-    box-sizing: border-box; /* Include padding in width calculation */
-  }
-
-  .chart-alarm-container {
-    display: flex;
-    flex-direction: column; /* Stack line chart and alarm data vertically on small screens */
-    gap: 10px; /* Reduce space between chart and alarm data */
-    align-items: stretch; /* Ensure full-width alignment */
-    width: 100%; /* Full width */
-    padding: 0; /* Remove padding */
-  }
-
-  .line-chart-container {
-    width: 100%; /* Full width for the line chart in mobile view */
-    margin: 0; /* Remove margin */
-    padding: 0; /* Remove padding */
-    overflow: hidden; /* Hide any overflow to ensure a clean look */
-  }
-
-  .alarm-data-container {
-    width: 100%; /* Full width for alarm data in mobile view */
-    padding: 0; /* Remove padding */
-  }
-
-  .alarm-data {
-    text-align: left; /* Align alarm data to the left for better readability */
-    margin-bottom: 5px; /* Reduced space between alarm data items */
-  }
-
-  .popup button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    flex-direction: column;
     gap: 10px;
-    margin-right: 10px; /* Add space between buttons */
-  }
-  
-  .popup button:hover {
-    background: #0056b3;
-  }
-  
-  .popup .cancel-button {
-    margin-right: 20px; /* Additional space between cancel and upload buttons */
-  }
-
-  .custom-button {
-    width: 100%; /* Make buttons full-width */
-    padding: 8px; /* Adjust padding */
-  }
-}
-
-/* page1 specific styles */
-.top-section {
-  display: flex;
-  justify-content: space-between; /* Space elements evenly */
-  align-items: center; /* Vertically align elements */
-  padding: 10px; /* Adjust padding for spacing */
-  gap: 20px; /* Space between sections */
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap; /* Allow wrapping for smaller screens */
-}
-
-.file-dropdown-container-wrapper,
-.upload-container,
-.equipment-id-container {
-  display: flex;
-  align-items: center; /* Vertically align elements */
-  gap: 10px; /* Space between elements */
-  flex: 1; /* Allow growth to fill available space */
-}
-
-.file-dropdown-container,
-.upload-container form,
-.equipment-id-container {
-  display: flex;
-  align-items: center; /* Vertically align elements */
-  gap: 10px; /* Space between elements */
-}
-
-.file-dropdown-container h5,
-.upload-container h5,
-.equipment-id-container h5 {
-  margin: 0; /* Remove default margin */
-  font-size: 1em; /* Adjust font size */
-  white-space: nowrap; /* Prevent text from wrapping */
-}
-
-.file-dropdown,
-.user-dropdown,
-.choose-file-button,
-.equipment-id-input {
-  padding: 5px; /* Add padding for better appearance */
-  font-size: 16px; /* Ensure text is readable */
-  border: 1px solid #ccc; /* Add a border */
-  border-radius: 4px; /* Rounded corners for aesthetics */
-  background-color: #fff; /* Dropdown background color */
-  width: auto; /* Allow width to adjust based on content */
-}
-
-.upload-button {
-  background-color: #04AA6D; /* Green */
-  border: 1px solid #04AA6D;
-  color: white;
-  padding: 5px 10px; /* Adjust padding */
-  border-radius: 4px;
-  cursor: pointer;
-  white-space: nowrap; /* Prevent text from wrapping */
-}z
-
-.upload-button:hover {
-  background-color: #028555; /* Darker green on hover */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .top-section {
-    flex-direction: column; /* Stack elements vertically on smaller screens */
-    gap: 10px; /* Reduce space between elements */
+    align-items: stretch;
+    padding: 5px;
   }
 
   .file-dropdown-container-wrapper,
   .upload-container,
   .equipment-id-container {
-    width: 100%; /* Full width on smaller screens */
-    justify-content: flex-start; /* Align elements to the start */
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .user-dropdown-container {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .select-csv-text,
+  .upload-csv-text {
+    display: none;
+  }
+
+  .file-dropdown-container h5,
+  .upload-container h5 {
+    margin-bottom: 5px;
+    text-align: left;
+  }
+
+  .file-dropdown-container select,
+  .upload-container input,
+  .upload-container button {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+
+  .upload-container form {
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    padding: 0;
+  }
+
+  .choose-file-button,
+  .upload-button {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .chart-alarm-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+  }
+
+  .line-chart-container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .alarm-data-container {
+    width: 100%;
+    padding: 0;
+  }
+
+  .alarm-data {
+    text-align: left;
+    margin-bottom: 5px;
+  }
+
+  .user-dropdown-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .user-dropdown {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .user-dropdown-container h3 {
+    text-align: left;
+  }
+
+  .custom-button {
+    width: 100%;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .file-dropdown-container-wrapper,
+  .upload-container,
+  .equipment-id-container {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
   }
 
   .file-dropdown-container h5,
   .upload-container h5,
   .equipment-id-container h5 {
-    display: none; /* Hide labels on smaller screens */
+    text-align: left;
+    font-size: 1em;
+    margin-bottom: 5px;
   }
 
   .file-dropdown,
-  .user-dropdown,
   .choose-file-button,
-  .equipment-id-input,
-  .upload-button {
-    width: 100%; /* Full width on smaller screens */
+  .upload-button,
+  .equipment-id-input {
+    width: 100%;
+    min-width: 200px;
+    max-width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  .choose-file-button {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .upload-container form {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .user-dropdown-container {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .user-dropdown {
+    width: 100%;
+    box-sizing: border-box;
   }
 }

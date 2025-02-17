@@ -1,41 +1,40 @@
-.linechart-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background-color: #f4f4f9;
-  padding: 10px;
-  box-sizing: border-box;
-}
+
 
 .linechart-container {
-  width: 100%;
-  height: 100%;
-  max-height: 80vh; /* Limit height for desktop */
-  min-height: 300px; /* Minimum height to avoid collapse */
+  width: 80%; /* Adaptive width for laptops */
+  /* height: 60%; */
+  height: 60vh;
+  max-height: 60%;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   box-sizing: border-box;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: stretch;
+  align-items: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .linechart-container {
+    width: 85%; /* Slightly wider for smaller laptops */
+    height: 65%; /* Increase height */
+  }
 }
 
 @media (max-width: 768px) {
   .linechart-container {
-    max-width: 90vw;
-    max-height: 60vh;
-    padding: 10px;
+    width: 90%; /* Wider for tablets */
+    height: 70%;
   }
 }
 
 @media (max-width: 480px) {
   .linechart-container {
-    max-width: 95vw;
-    max-height: 50vh;
-    padding: 5px;
+    width: 95%; /* Wider for mobile */
+    height: 75%;
   }
 }
+
+

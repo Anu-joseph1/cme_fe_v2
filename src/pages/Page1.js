@@ -159,7 +159,7 @@ const Page1 = () => {
 
       const data = await response.json();
       setCsvData(data);
-    } catch (error) {
+    } catch (error) { 
       console.error("Error fetching file data:", error);
     } finally {
       setLoadingChart(false);

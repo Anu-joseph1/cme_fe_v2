@@ -68,6 +68,7 @@ const LineChart = ({ fileName }) => {
           marker: { color: generateColor(index) },
           line: { dash: key.includes("SV") ? "dot" : "solid" }, // Setpoints as dotted lines
           name: key,
+          autosize: true,
         }));
 
         const baseLayout = {
