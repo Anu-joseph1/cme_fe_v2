@@ -1,70 +1,95 @@
-// src/pages/Page3.js
-import React, { useState, useEffect } from 'react';
-import dayjs from 'dayjs';
-import AlertComponent from '../components/AlertComponent';
-import Button from '../components/Button';
-import DateTimePickerComponent from '../components/DateTimePickerComponent';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./Page3.css";
+import { Hub } from "@aws-amplify/core"; // Import Hub for auth event listening
 
-
-const Page3 = () => {
-  const [startDateTime, setStartDateTime] = useState(dayjs().subtract(6, 'hour'));
-  const [endDateTime, setEndDateTime] = useState(dayjs());
-  const [alerts, setAlerts] = useState([]);
+const EquipmentList = ({ authChanged  }) => {
+  const [equipments, setEquipments] = useState([]);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchAlerts = async () => {
-      const fromTimestamp = Math.floor((new Date(startDateTime).getTime() + 5.5 * 60 * 60 * 1000) / 1000); // Convert to seconds in IST
-      const toTimestamp = Math.floor((new Date(endDateTime).getTime() + 5.5 * 60 * 60 * 1000) / 1000); // Convert to seconds in IST
-
+    const fetchEquipments = async () => {
       try {
-        const response = await fetch(`https://osyetsej45if3gu5e23edtuqfe0ttzoo.lambda-url.ap-south-1.on.aws/alarm_data?from_timestamp=${fromTimestamp}&to_timestamp=${toTimestamp}`);
+        const token = localStorage.getItem("authToken");
+
+        if (!token) {
+          setEquipments([]); // Clear equipment list if no token
+          return;
+        }
+
+        const response = await fetch(
+          "https://aoeyj7jtyq6wt6ldchudwouajy0klmyq.lambda-url.ap-south-1.on.aws/all_equipments",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
         const data = await response.json();
-
-        const formattedAlerts = data.map(item => ({
-          datetime: item.timestamp,  // Assuming timestamp is in the response
-          message: item.message,      // Assuming message is in the response
-        }));
-
-        setAlerts(formattedAlerts);
+        console.log("API Response:", data);
+        
+        if (data && data.equipments) {
+          setEquipments(data.equipments);
+        } else {
+          setError("No equipment data available.");
+        }
       } catch (error) {
-        console.error('Error fetching alert data:', error);
+        console.error("Fetch error:", error);
+        setError(error.message);
       }
     };
 
-    fetchAlerts();
+    fetchEquipments();
 
-    const interval = setInterval(fetchAlerts, 60000); // Update alert data every 60 seconds
+        // Listen for auth events to clear/refetch data
+      const authListener = ({ payload }) => {
+        if (payload.event === "signOut") {
+          setEquipments([]); // Clear equipment list on logout
+        } else if (payload.event === "signIn") {
+          fetchEquipments(); // Refetch equipment list on login
+        }
+      };
 
-    return () => clearInterval(interval);
-  }, [startDateTime, endDateTime]);
+      const unsubscribe = Hub.listen("auth", authListener);
+      return () => {
+        unsubscribe(); // Cleanup listener on unmount
+      };
+  }, [authChanged]); // Depend on authChanged to refetch on login/logout
 
-  const handleClick = (hours) => {
-    const newEndDateTime = dayjs();
-    const newStartDateTime = dayjs().subtract(hours, 'hour');
 
-    setStartDateTime(newStartDateTime);
-    setEndDateTime(newEndDateTime);
+  // useEffect(() => {
+  //   if (resetEquipmentList) {
+  //     setEquipments([]); // Reset the equipment list when the user logs out
+  //   }
+  // }, [resetEquipmentList]);
+
+  const handleEquipmentClick = (equip_id) => {
+    navigate(`/page1?equip_id=${equip_id}`);
   };
 
   return (
-    <div style={{marginTop: "20px"}}>
-      <div className="controls-container">
-        <DateTimePickerComponent 
-          label="Start DateTime:" 
-          value={startDateTime} 
-          onChange={setStartDateTime} 
-        />
-        <DateTimePickerComponent 
-          label="End DateTime:" 
-          value={endDateTime} 
-          onChange={setEndDateTime} 
-        />
-        <Button text="Last 6 Hours" onClick={() => handleClick(6)} />
-        <Button text="Last 1 Hour" onClick={() => handleClick(1)} />
-      </div>
-      <AlertComponent alerts={alerts} />
+    <div className="equipment-list-container">
+      <h2>Equipment List</h2>
+      {error ? (
+        <p className="error">{error}</p>
+      ) : (
+        <ul>
+          {equipments.length > 0 ? (
+            equipments.map((equip_id) => (
+              <li key={equip_id} onClick={() => handleEquipmentClick(equip_id)}>
+                {equip_id}
+              </li>
+            ))
+          ) : (
+            <p>No equipment data available.</p>
+          )}
+        </ul>
+      )}
     </div>
   );
 };
 
-export default Page3;
+export default EquipmentList;
