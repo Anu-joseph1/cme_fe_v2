@@ -24,16 +24,21 @@ const Page1 = () => {
   const equip_id = queryParams.get("equip_id"); // Get equip_id from query parameters
 
   useEffect(() => {
-    fetchCsvFiles();
-    fetchUsers();
-  }, []);
+  const token = localStorage.getItem("authToken");
+  if (!token) return; // 👈 wait until token is ready
 
-  useEffect(() => {
-    if (equip_id) {
-      setEquipmentId(equip_id);
-      fetchCsvFilesByEquipmentId(equip_id);
-    }
-  }, [equip_id]);
+  const queryParams = new URLSearchParams(location.search);
+  const equip_id = queryParams.get("equip_id");
+
+  if (equip_id) {
+    setEquipmentId(equip_id);
+    fetchCsvFilesByEquipmentId(equip_id);
+    fetchUsers();
+  }
+}, [location.search]);
+
+
+
 
   const fetchCsvFilesByEquipmentId = async (equip_id) => {
     try {
